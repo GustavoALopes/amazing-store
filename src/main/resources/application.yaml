@@ -1,2 +1,8 @@
 server:
   port: 5000
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/amazing-store
+    username: postgres
+    password: secret

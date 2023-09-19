@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  database:
+    image: postgres
+    container_name: amazing-store-db
+    environment:
+      POSTGRES_DB: amazing-store
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
