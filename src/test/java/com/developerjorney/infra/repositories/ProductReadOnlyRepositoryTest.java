@@ -1,10 +1,13 @@
 package com.developerjorney.infra.repositories;
 
 import com.developerjorney.application.product.queries.repositories.IProductReadOnlyRepository;
+import com.developerjorney.core.RequestScope;
+import com.developerjorney.core.persistence.unitofwork.UnitOfWork;
+import com.developerjorney.core.persistence.unitofwork.interfaces.IUnitOfWork;
 import com.developerjorney.domain.entities.product.Product;
 import com.developerjorney.domain.entities.product.inputs.CreateProductDomainInput;
-import com.developerjorney.infra.repositories.models.ProductJpaModel;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +18,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.context.request.RequestContextHolder;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
-        ProductReadOnlyRepository.class
+        ProductReadOnlyRepository.class,
+        UnitOfWork.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @EntityScan(value = {"com.developerjorney.domain.entities"})
@@ -28,6 +34,16 @@ public class ProductReadOnlyRepositoryTest {
 
     @Autowired
     private IProductReadOnlyRepository readOnlyRepository;
+
+    @Autowired
+    private IUnitOfWork unitOfWork;
+
+    @BeforeEach
+    public void setup() {
+//        //Add Request context cause UnitOfWork has request scoped
+        RequestContextHolder.setRequestAttributes(new RequestScope());
+        this.unitOfWork.begin();
+    }
 
     @Test
     void shouldGetListProducts() {
@@ -41,6 +57,7 @@ public class ProductReadOnlyRepositoryTest {
                         "XPTO"
                 )
         );
+        this.unitOfWork.persist(product);
 
         final var result = this.readOnlyRepository.getListProduct(input);
 

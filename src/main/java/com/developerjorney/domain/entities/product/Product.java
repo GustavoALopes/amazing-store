@@ -5,6 +5,7 @@ import com.developerjorney.domain.entities.product.inputs.CreateProductDomainInp
 import com.developerjorney.domain.entities.product.validations.CreateProductDomainInputValidation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +22,8 @@ public class Product extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    private final CreateProductDomainInputValidation createProductDomainInputValidation;
+    @Transient
+    private final transient CreateProductDomainInputValidation createProductDomainInputValidation;
 
     public Product() {
         this.code = "";

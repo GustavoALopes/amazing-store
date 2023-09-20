@@ -31,7 +31,7 @@ public class InfoValidateResultVO {
         return this.message.stream()
                 .map(message -> {
                     return Objects.equals(message.getType(), ValidateTypeEnum.ERROR) ||
-                            Objects.equals(message.getType(), ValidateTypeEnum.WARNING)
+                            Objects.equals(message.getType(), ValidateTypeEnum.WARNING);
                 })
                 .findFirst()
                 .map(value -> false)
