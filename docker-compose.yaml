@@ -1,5 +1,9 @@
 version: '3'
 
+networks:
+  local:
+    driver: bridge
+
 services:
   database:
     image: postgres
@@ -10,3 +14,5 @@ services:
       POSTGRES_PASSWORD: secret
     ports:
       - "5432:5432"
+    networks:
+        - local
