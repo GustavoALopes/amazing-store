@@ -1,4 +1,4 @@
-package com.developerjorney.domain.entities.product.inputs;
+package com.developerjorney.domain.product.entities.inputs;
 
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ public class CreateProductDomainInput {
 
     private final String description;
 
-    private String createdBy;
+    private final String createdBy;
 
     private CreateProductDomainInput(
         final String code,

@@ -1,20 +1,17 @@
-package com.developerjorney.domain.entities.product;
+package com.developerjorney.domain.product.entities;
 
 import com.developerjorney.domain.entities.base.BaseEntity;
-import com.developerjorney.domain.entities.product.inputs.CreateProductDomainInput;
-import com.developerjorney.domain.entities.product.validations.CreateProductDomainInputValidation;
+import com.developerjorney.domain.entities.base.interfaces.IAggregateRoot;
+import com.developerjorney.domain.product.entities.inputs.CreateProductDomainInput;
+import com.developerjorney.domain.product.entities.validations.CreateProductDomainInputValidation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.UUID;
-import java.util.concurrent.locks.StampedLock;
 
 @Entity
 @Getter
-public class Product extends BaseEntity {
+public class Product extends BaseEntity implements IAggregateRoot {
 
     @Column(name = "code")
     private String code;

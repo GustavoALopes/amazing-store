@@ -38,6 +38,10 @@ public class BaseEntity {
         return this.infoAudit.clone();
     }
 
+    public boolean isValid() {
+        return this.infoValidateResultVO.isValid();
+    }
+
     protected <T> boolean valid(final Supplier<T> validation) {
         final var result = validation.get();
         if(result instanceof ValidateResult valResult) {

@@ -1,10 +1,9 @@
-package com.developerjorney.domain.entities.product.validations;
+package com.developerjorney.domain.product.entities.validations;
 
 import com.developerjorney.core.patterns.validation.BaseValidation;
 import com.developerjorney.core.patterns.validation.enums.ValidateTypeEnum;
 import com.developerjorney.core.patterns.validation.models.ValidateMessage;
-import com.developerjorney.domain.entities.product.inputs.CreateProductDomainInput;
-import org.springframework.data.domain.PageRequest;
+import com.developerjorney.domain.product.entities.inputs.CreateProductDomainInput;
 
 import java.util.Objects;
 

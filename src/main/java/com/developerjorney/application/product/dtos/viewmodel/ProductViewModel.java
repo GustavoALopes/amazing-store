@@ -1,6 +1,6 @@
 package com.developerjorney.application.product.dtos.viewmodel;
 
-import com.developerjorney.domain.entities.product.Product;
+import com.developerjorney.domain.product.entities.Product;
 import lombok.Getter;
 
 @Getter

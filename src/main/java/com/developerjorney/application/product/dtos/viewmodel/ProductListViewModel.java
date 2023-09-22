@@ -2,7 +2,7 @@ package com.developerjorney.application.product.dtos.viewmodel;
 
 import com.developerjorney.application.dtos.base.ResponseBase;
 import com.developerjorney.core.patterns.notification.interfaces.INotification;
-import com.developerjorney.domain.entities.product.Product;
+import com.developerjorney.domain.product.entities.Product;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
