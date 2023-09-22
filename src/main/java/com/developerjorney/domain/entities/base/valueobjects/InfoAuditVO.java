@@ -3,25 +3,33 @@ package com.developerjorney.domain.entities.base.valueobjects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Embeddable
-public class InfoAuditVO {
+public class InfoAuditVO implements Serializable {
 
-    @Column(name = "createdBy")
+    private static final long serialVersionUID = 1L;
+
+    @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private Instant createdAt;
 
-    @Column(name = "updateBy")
-    private String updateBy;
+    @Column(name = "updated_by")
+    private String updatedBy;
 
-    @Column(name = "updateAt")
-    private Instant updateAt;
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 
-    @Column(name = "deletedAt")
+    @Column(name = "deleted_at")
     private Instant deletedAt;
+
+    public InfoAuditVO() {
+        this.createdBy = "";
+        this.updatedBy = "";
+    }
 
     private InfoAuditVO(final String createdBy, final Instant createdAt) {
         this.createdBy = createdBy;
@@ -31,22 +39,22 @@ public class InfoAuditVO {
     public InfoAuditVO(
             final String createdBy,
             final Instant createdAt,
-            final String updateBy,
-            final Instant updateAt
+            final String updatedBy,
+            final Instant updatedAt
     ) {
         this(createdBy, createdAt);
-        this.updateBy = updateBy;
-        this.updateAt = updateAt;
+        this.updatedBy = updatedBy;
+        this.updatedAt = updatedAt;
     }
 
     public InfoAuditVO(
         final String createdBy,
         final Instant createdAt,
-        final String updateBy,
-        final Instant updateAt,
+        final String updatedBy,
+        final Instant updatedAt,
         final Instant deletedAt
     ) {
-        this(createdBy, createdAt, updateBy, updateAt);
+        this(createdBy, createdAt, updatedBy, updatedAt);
         this.deletedAt = deletedAt;
     }
 
@@ -103,8 +111,8 @@ public class InfoAuditVO {
         return InfoAuditVO.fill(
                 this.createdBy,
                 this.createdAt,
-                this.updateBy,
-                this.updateAt,
+                this.updatedBy,
+                this.updatedAt,
                 this.deletedAt
         );
     }

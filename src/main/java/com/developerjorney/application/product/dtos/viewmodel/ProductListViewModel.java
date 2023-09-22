@@ -2,27 +2,24 @@ package com.developerjorney.application.product.dtos.viewmodel;
 
 import com.developerjorney.application.dtos.base.ResponseBase;
 import com.developerjorney.core.patterns.notification.interfaces.INotification;
+import com.developerjorney.domain.entities.product.Product;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Getter
-public class ProductListViewModel extends ResponseBase<Set<ProductViewModel>> {
+public class ProductListViewModel extends ResponseBase<Page<ProductViewModel>> {
 
     public ProductListViewModel() {
-        this(new HashSet<>(), new HashSet<>());
+        this(null, new HashSet<>());
     }
 
     private ProductListViewModel(
-        final Set<ProductViewModel> data
-    ) {
-        this(data, new HashSet<>());
-    }
-
-    private ProductListViewModel(
-            final Set<ProductViewModel> data,
-            final Set<INotification> messages
+        final Page<ProductViewModel> data,
+        final Set<INotification> messages
     ) {
         super(data, messages);
     }
@@ -33,12 +30,12 @@ public class ProductListViewModel extends ResponseBase<Set<ProductViewModel>> {
 
     public static class Builder {
 
-        private Set<ProductViewModel> products;
+        private List<ProductViewModel> products;
 
         private Set<INotification> notifications;
 
         public Builder() {
-            this.products = new HashSet<>();
+            this.products = new ArrayList<>();
             this.notifications = new HashSet<>();
         }
 
@@ -47,7 +44,7 @@ public class ProductListViewModel extends ResponseBase<Set<ProductViewModel>> {
             return this;
         }
 
-        public Builder addAllProduct(final Set<ProductViewModel> products) {
+        public Builder addAllProduct(final List<ProductViewModel> products) {
             this.products = products;
             return this;
         }
@@ -64,9 +61,18 @@ public class ProductListViewModel extends ResponseBase<Set<ProductViewModel>> {
 
         public ProductListViewModel build() {
             return new ProductListViewModel(
-                    this.products,
+                    new PageImpl<>(this.products, PageRequest.of(0, 20), this.products.size()),
                     this.notifications
             );
         }
+    }
+
+    public static ProductListViewModel create(
+            final Page<Product> page
+    )  {
+        return new ProductListViewModel(
+                page.map(ProductViewModel::create),
+                Collections.emptySet()
+        );
     }
 }

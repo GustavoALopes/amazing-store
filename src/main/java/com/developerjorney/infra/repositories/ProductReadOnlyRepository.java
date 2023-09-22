@@ -18,6 +18,6 @@ public class ProductReadOnlyRepository implements IProductReadOnlyRepository {
     @Override
     public ProductListViewModel getListProduct(final Pageable page) {
         final var result = this.jpaModel.findAll(page);
-        return new ProductListViewModel();
+        return ProductListViewModel.create(result);
     }
 }

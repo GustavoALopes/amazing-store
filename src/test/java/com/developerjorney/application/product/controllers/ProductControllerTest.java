@@ -4,7 +4,6 @@ import com.developerjorney.application.enums.ApiVersions;
 import com.developerjorney.application.product.dtos.viewmodel.ProductListViewModel;
 import com.developerjorney.application.product.dtos.viewmodel.ProductViewModel;
 import com.developerjorney.application.product.queries.interfaces.IProductQuery;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.HashSet;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
@@ -75,7 +72,7 @@ public class ProductControllerTest {
 
         this.mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].code").value(productViewModel.getCode()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].description").value(productViewModel.getDescription()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].code").value(productViewModel.getCode()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].description").value(productViewModel.getDescription()));
     }
 }

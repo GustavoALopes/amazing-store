@@ -1,6 +1,7 @@
 package com.developerjorney.infra.repositories;
 
 import com.developerjorney.application.product.queries.repositories.IProductReadOnlyRepository;
+import com.developerjorney.configurations.RequestScopeCDI;
 import com.developerjorney.core.RequestScope;
 import com.developerjorney.core.persistence.unitofwork.UnitOfWork;
 import com.developerjorney.core.persistence.unitofwork.interfaces.IUnitOfWork;
@@ -22,9 +23,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.request.RequestContextHolder;
 
 @DataJpaTest
+@WebAppConfiguration
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
         ProductReadOnlyRepository.class,
+        RequestScopeCDI.class,
         UnitOfWork.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -58,9 +61,16 @@ public class ProductReadOnlyRepositoryTest {
                 )
         );
         this.unitOfWork.persist(product);
+        this.unitOfWork.commit();
 
         final var result = this.readOnlyRepository.getListProduct(input);
 
         Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.getData().getPageable()).isNotNull();
+        Assertions.assertThat(result.getData().getContent()).isNotEmpty();
+
+        final var viewModel = result.getData().getContent().stream().findFirst().orElse(null);
+        Assertions.assertThat(viewModel.getCode()).isEqualTo(product.getCode());
+        Assertions.assertThat(viewModel.getDescription()).isEqualTo(product.getDescription());
     }
 }
