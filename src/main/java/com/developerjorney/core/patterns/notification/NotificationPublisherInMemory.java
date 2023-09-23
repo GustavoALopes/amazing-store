@@ -1,6 +1,6 @@
-package com.developerjorney.core.persistence.notifications;
+package com.developerjorney.core.patterns.notification;
 
-import com.developerjorney.core.persistence.notifications.interfaces.INotificationPublisher;
+import com.developerjorney.core.patterns.notification.interfaces.INotificationPublisher;
 import com.developerjorney.core.persistence.observable.interfaces.BasePublisher;
 import com.developerjorney.core.persistence.observable.interfaces.ISubscriber;
 import org.springframework.context.ApplicationContext;

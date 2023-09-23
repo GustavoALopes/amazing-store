@@ -1,5 +1,6 @@
 package com.developerjorney.domain.product.services;
 
+import com.developerjorney.core.patterns.notification.interfaces.INotificationPublisher;
 import com.developerjorney.domain.base.services.BaseService;
 import com.developerjorney.domain.product.entities.Product;
 import com.developerjorney.domain.product.entities.inputs.CreateProductDomainInput;
@@ -12,7 +13,11 @@ public class ProductService extends BaseService<Product> implements IProductServ
 
     private final IProductRepository repository;
 
-    public ProductService(final IProductRepository repository) {
+    public ProductService(
+            final INotificationPublisher notificationPublisher,
+            final IProductRepository repository
+    ) {
+        super(notificationPublisher);
         this.repository = repository;
     }
 
@@ -21,7 +26,7 @@ public class ProductService extends BaseService<Product> implements IProductServ
         final var product = new Product();
         product.create(input);
 
-        if(!product.isValid()) return false;
+        if(!this.isValidOrNotify(product)) return false;
 
         return this.repository.persist(product);
     }

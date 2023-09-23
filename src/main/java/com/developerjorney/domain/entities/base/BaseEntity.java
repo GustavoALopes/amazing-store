@@ -38,6 +38,10 @@ public class BaseEntity {
         return this.infoAudit.clone();
     }
 
+    public InfoValidateResultVO getInfoValidateResultVO() {
+        return this.infoValidateResultVO.deepClone();
+    }
+
     public boolean isValid() {
         return this.infoValidateResultVO.isValid();
     }
@@ -47,7 +51,7 @@ public class BaseEntity {
         if(result instanceof ValidateResult valResult) {
             return this.internalValid(valResult.getMessages());
         } else if (result instanceof InfoValidateResultVO infoValResult) {
-            return this.internalValid(infoValResult.getMessage());
+            return this.internalValid(infoValResult.getMessages());
         }
 
         return false;

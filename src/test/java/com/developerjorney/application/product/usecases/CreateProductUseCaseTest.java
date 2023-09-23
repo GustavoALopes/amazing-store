@@ -3,22 +3,25 @@ package com.developerjorney.application.product.usecases;
 
 import com.developerjorney.application.product.dtos.inputs.CreateProductInputModel;
 import com.developerjorney.configurations.MockUnitOfWork;
-import com.developerjorney.core.RequestScopeAttribute;
+import com.developerjorney.configurations.NotificationPublisherConfig;
+import com.developerjorney.core.patterns.notification.NotificationPublisherInMemory;
+import com.developerjorney.core.patterns.notification.NotificationSubscriber;
+import com.developerjorney.core.patterns.notification.interfaces.INotificationPublisher;
 import com.developerjorney.core.persistence.unitofwork.UnitOfWork;
 import com.developerjorney.domain.product.entities.Product;
 import com.developerjorney.domain.product.repositories.IProductRepository;
 import com.developerjorney.domain.product.services.ProductService;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.jmx.export.notification.NotificationPublisher;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.context.request.RequestContextHolder;
 
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
@@ -26,13 +29,20 @@ import org.springframework.web.context.request.RequestContextHolder;
         CreateProductUseCase.class,
         ProductService.class,
         UnitOfWork.class,
-        MockUnitOfWork.class
+        MockUnitOfWork.class,
+        NotificationPublisherConfig.class,
+        NotificationPublisherInMemory.class
 })
 public class CreateProductUseCaseTest {
 
     @Autowired
     private CreateProductUseCase useCase;
 
+    @SpyBean
+    private INotificationPublisher notificationPublisher;
+
+    @SpyBean
+    private NotificationSubscriber notificationSubscriber;
 
     @MockBean
     private IProductRepository repository;
@@ -69,6 +79,7 @@ public class CreateProductUseCaseTest {
         final var response = this.useCase.execute(input);
 
         Assertions.assertThat(response).isFalse();
+        Assertions.assertThat(this.notificationSubscriber.getNotifications()).isNotEmpty();
 
         Mockito.verify(this.repository, Mockito.never()).persist(Mockito.any(Product.class));
     }

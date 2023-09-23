@@ -12,23 +12,27 @@ import java.util.Objects;
 @Getter
 public class InfoValidateResultVO {
 
-    private final Collection<ValidateMessage> message;
+    private final Collection<ValidateMessage> messages;
 
 
     public InfoValidateResultVO() {
-        this.message = new ArrayList<>();
+        this.messages = new ArrayList<>();
+    }
+
+    public InfoValidateResultVO(final Collection<ValidateMessage> messages) {
+        this.messages = messages;
     }
 
     public void addMessage(final ValidateMessage message) {
-        this.message.add(message);
+        this.messages.add(message);
     }
 
     public void addValidateResult(final ValidateResult result) {
-        this.message.addAll(result.getMessages());
+        this.messages.addAll(result.getMessages());
     }
 
     public boolean isValid() {
-        return this.message.stream()
+        return this.messages.stream()
                 .map(message -> {
                     return Objects.equals(message.getType(), ValidateTypeEnum.ERROR) ||
                             Objects.equals(message.getType(), ValidateTypeEnum.WARNING);
@@ -36,5 +40,9 @@ public class InfoValidateResultVO {
                 .findFirst()
                 .map(value -> false)
                 .orElse(true);
+    }
+
+    public InfoValidateResultVO deepClone() {
+        return new InfoValidateResultVO(this.messages);
     }
 }

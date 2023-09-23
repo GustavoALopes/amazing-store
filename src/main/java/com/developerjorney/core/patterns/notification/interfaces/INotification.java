@@ -1,11 +1,11 @@
 package com.developerjorney.core.patterns.notification.interfaces;
 
-import com.developerjorney.core.patterns.notification.enums.ValidationTypeEnum;
+import com.developerjorney.core.patterns.notification.enums.NotificationTypeEnum;
 
 public interface INotification {
-    ValidationTypeEnum getType();
+    NotificationTypeEnum type();
 
-    String getCode();
+    String code();
 
-    String getMessage();
+    String message();
 }

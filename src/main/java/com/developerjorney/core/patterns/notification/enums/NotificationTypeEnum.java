@@ -3,7 +3,7 @@ package com.developerjorney.core.patterns.notification.enums;
 import lombok.Getter;
 
 @Getter
-public enum ValidationTypeEnum {
+public enum NotificationTypeEnum {
     INFO,
     WARNING,
     ERROR

@@ -1,4 +1,4 @@
-package com.developerjorney.core.persistence.notifications.interfaces;
+package com.developerjorney.core.patterns.notification.interfaces;
 
 import com.developerjorney.core.persistence.observable.interfaces.IPublisher;
 

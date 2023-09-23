@@ -1,6 +1,8 @@
 package com.developerjorney.domain.base.services;
 
-import com.developerjorney.core.persistence.notifications.interfaces.INotificationPublisher;
+import com.developerjorney.core.patterns.notification.enums.NotificationTypeEnum;
+import com.developerjorney.core.patterns.notification.models.Notification;
+import com.developerjorney.core.patterns.notification.interfaces.INotificationPublisher;
 import com.developerjorney.domain.entities.base.BaseEntity;
 import com.developerjorney.domain.entities.base.interfaces.IAggregateRoot;
 
@@ -15,6 +17,15 @@ public abstract class BaseService<T extends IAggregateRoot> {
     protected boolean isValidOrNotify(final BaseEntity entity) {
         if(entity.isValid()) return true;
 
-        entity.get
+        entity.getInfoValidateResultVO().getMessages()
+                .forEach(message -> {
+                    this.notificationPublisher.publisher(new Notification(
+                            NotificationTypeEnum.valueOf(message.getType().name()),
+                            message.getCode(),
+                            message.getDescription()
+                    ));
+                });
+
+        return false;
     }
 }
