@@ -5,10 +5,12 @@ import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationPublisher;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class NotificationPublisherConfig implements ApplicationRunner {
+public class NotificationPublisherConfig {
 
     private final INotificationPublisher notificationPublisher;
 
@@ -16,11 +18,11 @@ public class NotificationPublisherConfig implements ApplicationRunner {
         this.notificationPublisher = notificationPublisher;
     }
 
-    @Override
-    public void run(final ApplicationArguments args) {
+    @Bean
+    public void run() {
         this.notificationPublisher.subscriber(
-                NotificationSubscriber.class,
-                INotification.class
+            NotificationSubscriber.class,
+            INotification.class
         );
     }
 }
