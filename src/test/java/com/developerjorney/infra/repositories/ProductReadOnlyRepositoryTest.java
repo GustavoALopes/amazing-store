@@ -2,7 +2,7 @@ package com.developerjorney.infra.repositories;
 
 import com.developerjorney.application.product.queries.repositories.IProductReadOnlyRepository;
 import com.developerjorney.configurations.RequestScopeCDI;
-import com.developerjorney.core.RequestScope;
+import com.developerjorney.core.RequestScopeAttribute;
 import com.developerjorney.core.persistence.unitofwork.UnitOfWork;
 import com.developerjorney.core.persistence.unitofwork.interfaces.IUnitOfWork;
 import com.developerjorney.domain.product.entities.Product;
@@ -44,7 +44,7 @@ public class ProductReadOnlyRepositoryTest {
     @BeforeEach
     public void setup() {
 //        //Add Request context cause UnitOfWork has request scoped
-        RequestContextHolder.setRequestAttributes(new RequestScope());
+        RequestContextHolder.setRequestAttributes(new RequestScopeAttribute());
         this.unitOfWork.begin();
     }
 

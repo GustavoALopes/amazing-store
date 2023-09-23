@@ -24,8 +24,8 @@ public class CreateProductUseCase extends BaseUseCase<CreateProductInputModel, B
     @Override
     protected Boolean executeInternal(final CreateProductInputModel input) {
         return this.service.create(CreateProductDomainInput.create(
-                input.getCode(),
-                input.getDescription(),
+                input.code(),
+                input.description(),
                 "not_implemeted"
         ));
     }

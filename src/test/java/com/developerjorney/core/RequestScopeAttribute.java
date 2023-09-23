@@ -5,7 +5,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestScope implements RequestAttributes {
+public class RequestScopeAttribute implements RequestAttributes {
 
     private Map<String, Object> requestAttributeMap = new HashMap<>();
 

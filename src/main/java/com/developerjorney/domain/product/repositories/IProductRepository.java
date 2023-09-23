@@ -1,7 +1,7 @@
 package com.developerjorney.domain.product.repositories;
 
-import com.developerjorney.domain.entities.base.interfaces.IAggregateRoot;
 import com.developerjorney.domain.entities.base.interfaces.IRepository;
+import com.developerjorney.domain.product.entities.Product;
 
-public interface IProductRepository<T extends IAggregateRoot> extends IRepository<T> {
+public interface IProductRepository extends IRepository<Product> {
 }
