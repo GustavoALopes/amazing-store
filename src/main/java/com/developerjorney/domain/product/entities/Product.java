@@ -1,7 +1,7 @@
 package com.developerjorney.domain.product.entities;
 
-import com.developerjorney.domain.entities.base.BaseEntity;
-import com.developerjorney.domain.entities.base.interfaces.IAggregateRoot;
+import com.developerjorney.domain.base.entities.BaseEntity;
+import com.developerjorney.domain.base.entities.interfaces.IAggregateRoot;
 import com.developerjorney.domain.product.entities.inputs.CreateProductDomainInput;
 import com.developerjorney.domain.product.entities.validations.CreateProductDomainInputValidation;
 import jakarta.persistence.Column;

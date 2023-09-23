@@ -1,4 +1,4 @@
-package com.developerjorney.domain.entities.base.valueobjects;
+package com.developerjorney.domain.base.entities.valueobjects;
 
 import com.developerjorney.core.patterns.validation.enums.ValidateTypeEnum;
 import com.developerjorney.core.patterns.validation.models.ValidateMessage;

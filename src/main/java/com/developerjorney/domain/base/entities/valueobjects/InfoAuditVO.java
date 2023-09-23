@@ -1,4 +1,4 @@
-package com.developerjorney.domain.entities.base.valueobjects;
+package com.developerjorney.domain.base.entities.valueobjects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

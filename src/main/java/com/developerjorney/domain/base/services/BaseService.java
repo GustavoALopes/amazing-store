@@ -3,8 +3,8 @@ package com.developerjorney.domain.base.services;
 import com.developerjorney.core.patterns.notification.enums.NotificationTypeEnum;
 import com.developerjorney.core.patterns.notification.models.Notification;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationPublisher;
-import com.developerjorney.domain.entities.base.BaseEntity;
-import com.developerjorney.domain.entities.base.interfaces.IAggregateRoot;
+import com.developerjorney.domain.base.entities.BaseEntity;
+import com.developerjorney.domain.base.entities.interfaces.IAggregateRoot;
 
 public abstract class BaseService<T extends IAggregateRoot> {
 
@@ -16,7 +16,7 @@ public abstract class BaseService<T extends IAggregateRoot> {
 
     protected boolean isValidOrNotify(final BaseEntity entity) {
         if(entity.isValid()) return true;
-
+        
         entity.getInfoValidateResultVO().getMessages()
                 .forEach(message -> {
                     this.notificationPublisher.publisher(new Notification(

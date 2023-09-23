@@ -1,9 +1,9 @@
-package com.developerjorney.domain.entities.base;
+package com.developerjorney.domain.base.entities;
 
 import com.developerjorney.core.patterns.validation.models.ValidateMessage;
 import com.developerjorney.core.patterns.validation.models.ValidateResult;
-import com.developerjorney.domain.entities.base.valueobjects.InfoAuditVO;
-import com.developerjorney.domain.entities.base.valueobjects.InfoValidateResultVO;
+import com.developerjorney.domain.base.entities.valueobjects.InfoAuditVO;
+import com.developerjorney.domain.base.entities.valueobjects.InfoValidateResultVO;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;

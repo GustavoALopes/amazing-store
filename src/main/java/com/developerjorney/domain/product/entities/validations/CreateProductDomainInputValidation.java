@@ -11,6 +11,8 @@ public class CreateProductDomainInputValidation extends BaseValidation<CreatePro
 
     private static final String SUFFIX = "CREATE_PRODUCT_";
 
+    public static final String CREATE_PRODUCT_CODE_VALIDATE_CODE = SUFFIX + "CODE_IS_REQUIRED";
+
     @Override
     public void internalValidate(final CreateProductDomainInput input) {
         if(Objects.isNull(input.getCode()) || input.getCode().isEmpty()) {
