@@ -1,5 +1,6 @@
 package com.developerjorney.infra.repositories;
 
+import com.developerjorney.BasePostgreSQLContainer;
 import com.developerjorney.application.product.queries.repositories.IProductReadOnlyRepository;
 import com.developerjorney.configurations.RequestScopeCDI;
 import com.developerjorney.core.RequestScopeAttribute;
@@ -29,11 +30,9 @@ import org.springframework.web.context.request.RequestContextHolder;
         ProductReadOnlyRepository.class,
         RequestScopeCDI.class,
         UnitOfWork.class
-})
+}, initializers = BasePostgreSQLContainer.Initializer.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@EntityScan(value = {"com.developerjorney.domain.entities"})
-@EnableJpaRepositories(value = {"com.developerjorney.infra.repositories.*"})
-public class ProductReadOnlyRepositoryTest {
+public class ProductReadOnlyRepositoryTest extends BasePostgreSQLContainer {
 
     @Autowired
     private IProductReadOnlyRepository readOnlyRepository;
