@@ -1,7 +1,6 @@
 package com.developerjorney.application.product.usecases;
 
 import com.developerjorney.application.product.dtos.inputs.CreateProductInputModel;
-import com.developerjorney.application.product.dtos.viewmodel.CreatedProductViewModel;
 import com.developerjorney.core.persistence.unitofwork.interfaces.IUnitOfWork;
 import com.developerjorney.core.usecase.BaseUseCase;
 import com.developerjorney.domain.product.entities.inputs.CreateProductDomainInput;

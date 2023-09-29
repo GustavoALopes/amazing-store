@@ -1,6 +1,6 @@
-package com.developerjorney.application.product.dtos.viewmodel;
+package com.developerjorney.application.product.dtos.views;
 
-import com.developerjorney.application.dtos.base.ResponseBase;
+import com.developerjorney.application.base.dtos.ResponseBase;
 import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import lombok.Getter;
 

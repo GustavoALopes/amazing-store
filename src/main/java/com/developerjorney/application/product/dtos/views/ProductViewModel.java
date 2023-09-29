@@ -1,4 +1,4 @@
-package com.developerjorney.application.product.dtos.viewmodel;
+package com.developerjorney.application.product.dtos.views;
 
 import com.developerjorney.domain.product.entities.Product;
 import lombok.Getter;

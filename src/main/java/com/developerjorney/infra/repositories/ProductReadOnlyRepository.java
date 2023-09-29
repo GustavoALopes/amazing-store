@@ -1,6 +1,6 @@
 package com.developerjorney.infra.repositories;
 
-import com.developerjorney.application.product.dtos.viewmodel.ProductListViewModel;
+import com.developerjorney.application.product.dtos.views.ProductListViewModel;
 import com.developerjorney.application.product.queries.repositories.IProductReadOnlyRepository;
 import com.developerjorney.infra.repositories.models.ProductJpaModel;
 import org.springframework.data.domain.Pageable;

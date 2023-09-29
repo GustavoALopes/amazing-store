@@ -1,6 +1,7 @@
-package com.developerjorney.application.dtos.base;
+package com.developerjorney.application.base.dtos;
 
 import com.developerjorney.core.patterns.notification.interfaces.INotification;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.util.Set;
 @Getter
 public abstract class ResponseBase<T> implements Serializable {
 
+    @JsonIgnore
     public final long serialVersionUID = 1L;
 
     protected final T data;
