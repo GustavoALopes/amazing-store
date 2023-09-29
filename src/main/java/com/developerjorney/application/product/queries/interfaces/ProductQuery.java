@@ -1,6 +1,6 @@
 package com.developerjorney.application.product.queries.interfaces;
 
-import com.developerjorney.application.product.dtos.viewmodel.ProductListViewModel;
+import com.developerjorney.application.product.dtos.views.ProductListViewModel;
 import com.developerjorney.application.product.queries.repositories.IProductReadOnlyRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

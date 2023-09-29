@@ -2,6 +2,8 @@ package com.developerjorney.core.persistence.unitofwork.interfaces;
 
 import org.springframework.beans.factory.DisposableBean;
 
+import java.util.function.Supplier;
+
 public interface IUnitOfWork extends DisposableBean {
 
     boolean isTransactionOpen();
@@ -13,4 +15,6 @@ public interface IUnitOfWork extends DisposableBean {
     boolean rollback();
 
     <T> void persist(final T canBeProxy);
+
+    <TOut> TOut execute(final Supplier<TOut> action);
 }

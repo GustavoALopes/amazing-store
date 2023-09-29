@@ -1,12 +1,13 @@
 package com.developerjorney.infra.repositories;
 
+import com.developerjorney.BasePostgreSQLContainer;
 import com.developerjorney.application.product.queries.repositories.IProductReadOnlyRepository;
 import com.developerjorney.configurations.RequestScopeCDI;
-import com.developerjorney.core.RequestScope;
+import com.developerjorney.core.RequestScopeAttribute;
 import com.developerjorney.core.persistence.unitofwork.UnitOfWork;
 import com.developerjorney.core.persistence.unitofwork.interfaces.IUnitOfWork;
-import com.developerjorney.domain.entities.product.Product;
-import com.developerjorney.domain.entities.product.inputs.CreateProductDomainInput;
+import com.developerjorney.domain.product.entities.Product;
+import com.developerjorney.domain.product.entities.inputs.CreateProductDomainInput;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,11 +30,9 @@ import org.springframework.web.context.request.RequestContextHolder;
         ProductReadOnlyRepository.class,
         RequestScopeCDI.class,
         UnitOfWork.class
-})
+}, initializers = BasePostgreSQLContainer.Initializer.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@EntityScan(value = {"com.developerjorney.domain.entities"})
-@EnableJpaRepositories(value = {"com.developerjorney.infra.repositories.*"})
-public class ProductReadOnlyRepositoryTest {
+public class ProductReadOnlyRepositoryTest extends BasePostgreSQLContainer {
 
     @Autowired
     private IProductReadOnlyRepository readOnlyRepository;
@@ -44,7 +43,7 @@ public class ProductReadOnlyRepositoryTest {
     @BeforeEach
     public void setup() {
 //        //Add Request context cause UnitOfWork has request scoped
-        RequestContextHolder.setRequestAttributes(new RequestScope());
+        RequestContextHolder.setRequestAttributes(new RequestScopeAttribute());
         this.unitOfWork.begin();
     }
 

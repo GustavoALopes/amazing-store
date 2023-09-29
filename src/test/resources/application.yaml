@@ -5,12 +5,8 @@ spring:
     hibernate:
       ddl-auto: none
   datasource:
-    url: jdbc:postgresql://localhost:5432/amazing-store-test
-    username: postgres
-    password: secret
+    url: jdbc:tc:postgresql:16.0:///amazing-store-test
+    username: test
+    password: test
   flyway:
-    url: jdbc:postgresql://localhost:5432/amazing-store-test
-    user: postgres
-    password: secret
-    schema: public
     enabled: true

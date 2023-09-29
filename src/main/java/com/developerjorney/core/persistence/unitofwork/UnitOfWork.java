@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformationSuppo
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
+import java.util.function.Supplier;
+
 @Component
 @RequestScope
 public class UnitOfWork implements IUnitOfWork {
@@ -49,6 +51,14 @@ public class UnitOfWork implements IUnitOfWork {
         } else {
             this.context.merge(entity);
         }
+    }
+
+    @Override
+    public <TOut> TOut execute(final Supplier<TOut> action) {
+        this.begin();
+        final var result = action.get();
+        this.commit();
+        return result;
     }
 
     private <T> boolean isNew(final T entity) {

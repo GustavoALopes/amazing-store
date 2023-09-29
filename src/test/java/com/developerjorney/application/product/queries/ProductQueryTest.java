@@ -1,7 +1,7 @@
 package com.developerjorney.application.product.queries;
 
-import com.developerjorney.application.product.dtos.viewmodel.ProductListViewModel;
-import com.developerjorney.application.product.dtos.viewmodel.ProductViewModel;
+import com.developerjorney.application.product.dtos.views.ProductListViewModel;
+import com.developerjorney.application.product.dtos.views.ProductViewModel;
 import com.developerjorney.application.product.queries.interfaces.IProductQuery;
 import com.developerjorney.application.product.queries.interfaces.ProductQuery;
 import com.developerjorney.application.product.queries.repositories.IProductReadOnlyRepository;
