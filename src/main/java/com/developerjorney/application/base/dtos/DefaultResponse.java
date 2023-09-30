@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-public abstract class ResponseBase<T> implements Serializable {
+public class DefaultResponse<T> implements Serializable {
 
     @JsonIgnore
     public final long serialVersionUID = 1L;
@@ -18,12 +18,12 @@ public abstract class ResponseBase<T> implements Serializable {
 
     protected final Set<INotification> messages;
 
-    public ResponseBase() {
+    public DefaultResponse() {
         this.data = null;
         this.messages = new HashSet<>();
     }
 
-    protected ResponseBase(
+    protected DefaultResponse(
             final T data,
             final Set<INotification> messages
     ) {
@@ -33,5 +33,24 @@ public abstract class ResponseBase<T> implements Serializable {
 
     public void addMessage(final INotification message) {
         this.messages.add(message);
+    }
+
+    public static <T> DefaultResponse<T> create(
+        final T data
+    ) {
+        return new DefaultResponse<>(
+                data,
+                new HashSet<>()
+        );
+    }
+
+    public static <T> DefaultResponse<T> create(
+            final T data,
+            final Set<INotification> notifications
+    ) {
+        return new DefaultResponse<>(
+                data,
+                notifications
+        );
     }
 }

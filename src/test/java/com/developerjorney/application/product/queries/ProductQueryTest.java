@@ -1,6 +1,6 @@
 package com.developerjorney.application.product.queries;
 
-import com.developerjorney.application.product.dtos.views.ProductListViewModel;
+import com.developerjorney.application.base.dtos.PageableResponse;
 import com.developerjorney.application.product.dtos.views.ProductViewModel;
 import com.developerjorney.application.product.queries.interfaces.IProductQuery;
 import com.developerjorney.application.product.queries.interfaces.ProductQuery;
@@ -15,6 +15,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Arrays;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
@@ -34,9 +36,13 @@ public class ProductQueryTest {
         //Inputs
         final var input = PageRequest.of(0, 20);
         final var productViewModel = ProductViewModel.create("XPTO", "Description XPTO");
-        final var viewModel = ProductListViewModel.builder()
-                        .addProduct(productViewModel)
-                        .build();
+        final var viewModel = PageableResponse.create(
+                0,
+                1,
+                1,
+                1L,
+                Arrays.asList(productViewModel)
+        );
 
         //Mock
         BDDMockito.given(this.readOnlyRepository.getListProduct(input))
@@ -48,9 +54,9 @@ public class ProductQueryTest {
         //Assertions
         Mockito.verify(this.readOnlyRepository, Mockito.times(1)).getListProduct(input);
 
-        Assertions.assertThat(result.getData()).isNotEmpty();
+        Assertions.assertThat(result.getData().getContent()).isNotEmpty();
 
-        final var productResult = result.getData().stream().findFirst().orElse(null);
+        final var productResult = result.getData().getContent().stream().findFirst().orElse(null);
         Assertions.assertThat(productResult.getCode()).isEqualTo(productResult.getCode());
         Assertions.assertThat(productResult.getDescription()).isEqualTo(productResult.getDescription());
     }

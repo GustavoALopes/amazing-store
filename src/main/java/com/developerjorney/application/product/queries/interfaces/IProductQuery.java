@@ -1,8 +1,10 @@
 package com.developerjorney.application.product.queries.interfaces;
 
-import com.developerjorney.application.product.dtos.views.ProductListViewModel;
+import com.developerjorney.application.base.dtos.DefaultResponse;
+import com.developerjorney.application.base.dtos.PageableResponse;
+import com.developerjorney.application.product.dtos.views.ProductViewModel;
 import org.springframework.data.domain.Pageable;
 
 public interface IProductQuery {
-    ProductListViewModel getListProduct(final Pageable page);
+    DefaultResponse<PageableResponse<ProductViewModel>> getListProduct(final Pageable page);
 }

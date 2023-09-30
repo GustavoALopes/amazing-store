@@ -1,9 +1,10 @@
 package com.developerjorney.application.product.queries.repositories;
 
-import com.developerjorney.application.product.dtos.views.ProductListViewModel;
+import com.developerjorney.application.base.dtos.PageableResponse;
+import com.developerjorney.application.product.dtos.views.ProductViewModel;
 import org.springframework.data.domain.Pageable;
 
 public interface IProductReadOnlyRepository {
 
-    ProductListViewModel getListProduct(final Pageable page);
+    PageableResponse<ProductViewModel> getListProduct(final Pageable page);
 }
