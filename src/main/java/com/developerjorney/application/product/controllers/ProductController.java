@@ -1,11 +1,12 @@
 package com.developerjorney.application.product.controllers;
 
 import com.developerjorney.application.base.controllers.BaseController;
-import com.developerjorney.application.base.dtos.ResponseBase;
+import com.developerjorney.application.base.dtos.DefaultResponse;
+import com.developerjorney.application.base.dtos.PageableResponse;
 import com.developerjorney.application.base.dtos.views.ErrorsNotificationsViewModel;
 import com.developerjorney.application.enums.ApiVersions;
 import com.developerjorney.application.product.dtos.inputs.CreateProductInputModel;
-import com.developerjorney.application.product.dtos.views.ProductListViewModel;
+import com.developerjorney.application.product.dtos.views.ProductViewModel;
 import com.developerjorney.application.product.queries.interfaces.IProductQuery;
 import com.developerjorney.application.product.usecases.CreateProductUseCase;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationSubscriber;
@@ -34,7 +35,7 @@ public class ProductController extends BaseController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductListViewModel> getListProduct(
+    public ResponseEntity<DefaultResponse<PageableResponse<ProductViewModel>>> getListProduct(
             final @PageableDefault(size = 20) Pageable page
     ) {
         final var result = this.query.getListProduct(page);
@@ -42,7 +43,7 @@ public class ProductController extends BaseController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseBase> createProduct(
+    public ResponseEntity<DefaultResponse> createProduct(
         final @RequestBody CreateProductInputModel inputModel
     ) {
         final var result = this.createProductUseCase.execute(inputModel);

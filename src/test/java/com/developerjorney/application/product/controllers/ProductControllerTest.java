@@ -1,16 +1,13 @@
 package com.developerjorney.application.product.controllers;
 
+import com.developerjorney.application.base.dtos.DefaultResponse;
+import com.developerjorney.application.base.dtos.PageableResponse;
 import com.developerjorney.application.enums.ApiVersions;
 import com.developerjorney.application.product.dtos.inputs.CreateProductInputModel;
-import com.developerjorney.application.product.dtos.views.ProductListViewModel;
 import com.developerjorney.application.product.dtos.views.ProductViewModel;
 import com.developerjorney.application.product.queries.interfaces.IProductQuery;
 import com.developerjorney.application.product.usecases.CreateProductUseCase;
-import com.developerjorney.configurations.NotificationPublisherConfig;
-import com.developerjorney.core.patterns.notification.NotificationPublisherInMemory;
-import com.developerjorney.core.patterns.notification.NotificationSubscriber;
 import com.developerjorney.core.patterns.notification.enums.NotificationTypeEnum;
-import com.developerjorney.core.patterns.notification.interfaces.INotificationPublisher;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationSubscriber;
 import com.developerjorney.core.patterns.notification.models.Notification;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 @WebAppConfiguration
@@ -74,9 +71,16 @@ public class ProductControllerTest {
     @Test
     public void shouldGetProductList() throws Exception {
         //Inputs
-        final var viewModel = ProductListViewModel.builder()
-                .addProduct(ProductViewModel.create("XPTO", "description XPTO"))
-                .build();
+        final var viewModel = DefaultResponse.create(
+                PageableResponse.create(
+                    0,
+                    1,
+                    1,
+                    1L,
+                    Set.of(ProductViewModel.create("XPTO", "description XPTO"))
+                ),
+                new HashSet<>()
+        );
 
         //Mock
         BDDMockito.given(this.query.getListProduct(PageRequest.of(0, 20)))
@@ -89,7 +93,8 @@ public class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload);
 
-        final var productViewModel = viewModel.getData().stream().findFirst().orElse(null);
+        final var productViewModel = viewModel.getData().getContent()
+                .stream().findFirst().orElse(null);
 
         this.mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())

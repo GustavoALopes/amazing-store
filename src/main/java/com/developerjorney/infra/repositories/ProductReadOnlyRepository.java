@@ -1,7 +1,9 @@
 package com.developerjorney.infra.repositories;
 
-import com.developerjorney.application.product.dtos.views.ProductListViewModel;
+import com.developerjorney.application.base.dtos.PageableResponse;
+import com.developerjorney.application.product.dtos.views.ProductViewModel;
 import com.developerjorney.application.product.queries.repositories.IProductReadOnlyRepository;
+import com.developerjorney.domain.product.entities.Product;
 import com.developerjorney.infra.repositories.models.ProductJpaModel;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -16,8 +18,11 @@ public class ProductReadOnlyRepository implements IProductReadOnlyRepository {
     }
 
     @Override
-    public ProductListViewModel getListProduct(final Pageable page) {
+    public PageableResponse<ProductViewModel> getListProduct(final Pageable page) {
         final var result = this.jpaModel.findAll(page);
-        return ProductListViewModel.create(result);
+        return PageableResponse.<ProductViewModel, Product>create(
+                result,
+                (product) -> ProductViewModel.create(product)
+        );
     }
 }

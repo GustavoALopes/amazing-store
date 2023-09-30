@@ -13,11 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -65,10 +63,10 @@ public class ProductReadOnlyRepositoryTest extends BasePostgreSQLContainer {
         final var result = this.readOnlyRepository.getListProduct(input);
 
         Assertions.assertThat(result).isNotNull();
-        Assertions.assertThat(result.getData().getPageable()).isNotNull();
-        Assertions.assertThat(result.getData().getContent()).isNotEmpty();
+        Assertions.assertThat(result.getPagination()).isNotNull();
+        Assertions.assertThat(result.getContent()).isNotEmpty();
 
-        final var viewModel = result.getData().getContent().stream().findFirst().orElse(null);
+        final var viewModel = result.getContent().stream().findFirst().orElse(null);
         Assertions.assertThat(viewModel.getCode()).isEqualTo(product.getCode());
         Assertions.assertThat(viewModel.getDescription()).isEqualTo(product.getDescription());
     }

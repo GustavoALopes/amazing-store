@@ -1,16 +1,14 @@
 package com.developerjorney.application.base.dtos.views;
 
-import com.developerjorney.application.base.dtos.ResponseBase;
+import com.developerjorney.application.base.dtos.DefaultResponse;
 import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import lombok.Getter;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
-public class ErrorsNotificationsViewModel extends ResponseBase<String> {
+public class ErrorsNotificationsViewModel extends DefaultResponse<String> {
 
     public ErrorsNotificationsViewModel() {
         super("", Collections.emptySet());
