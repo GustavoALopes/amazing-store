@@ -7,4 +7,6 @@ import java.util.Set;
 public interface INotificationSubscriber extends ISubscriber<INotification> {
 
     Set<INotification> getNotifications();
+
+    boolean hasNotification();
 }

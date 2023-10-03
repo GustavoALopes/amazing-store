@@ -61,6 +61,11 @@ public class UnitOfWork implements IUnitOfWork {
         return result;
     }
 
+    @Override
+    public EntityManager getEntityManager() {
+        return this.context;
+    }
+
     private <T> boolean isNew(final T entity) {
         final var entityInfo = JpaEntityInformationSupport.<T>getEntityInformation(
                 (Class<T>) entity.getClass(),
