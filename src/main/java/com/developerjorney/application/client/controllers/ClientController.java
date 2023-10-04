@@ -28,7 +28,7 @@ public class ClientController extends BaseController {
 
     @PostMapping(value = "/import")
     public ResponseEntity<DefaultResponse> importClient(
-            final @RequestBody ImportClientInput input
+        final @RequestBody ImportClientInput input
     ) {
         final var result = this.importClientUseCase.execute(input);
         if(!result) {
