@@ -16,8 +16,7 @@ import java.util.stream.Collectors;
 @Builder
 public class PageableResponse<T> implements Serializable {
 
-    @JsonIgnore
-    private final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private final Pagination pagination;
 
