@@ -28,4 +28,9 @@ public class NotificationSubscriber implements INotificationSubscriber {
     public Set<INotification> getNotifications() {
         return Collections.unmodifiableSet(this.notifications);
     }
+
+    @Override
+    public boolean hasNotification() {
+        return !this.notifications.isEmpty();
+    }
 }

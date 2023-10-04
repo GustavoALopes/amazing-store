@@ -7,11 +7,13 @@ import com.developerjorney.domain.base.entities.valueobjects.InfoValidateResultV
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+@Getter
 @MappedSuperclass
 public class BaseEntity {
 

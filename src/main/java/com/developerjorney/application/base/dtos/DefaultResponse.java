@@ -11,8 +11,7 @@ import java.util.Set;
 @Getter
 public class DefaultResponse<T> implements Serializable {
 
-    @JsonIgnore
-    public final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
     protected final T data;
 
