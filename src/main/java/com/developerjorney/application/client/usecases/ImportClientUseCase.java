@@ -20,7 +20,7 @@ public class ImportClientUseCase extends BaseUseCase<ImportClientInput, Boolean>
     protected Boolean executeInternal(final ImportClientInput input) {
         return this.service.importClient(ImportClientDomainInput.create(
                 input.name(),
-                input.lastname(),
+                input.lastName(),
                 input.birthdate(),
                 "NOT-IMPLEMENT-YET"
         ));
