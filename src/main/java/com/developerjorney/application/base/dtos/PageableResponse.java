@@ -16,8 +16,7 @@ import java.util.stream.Collectors;
 @Builder
 public class PageableResponse<T> implements Serializable {
 
-    @JsonIgnore
-    private final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private final Pagination pagination;
 
@@ -58,7 +57,7 @@ public class PageableResponse<T> implements Serializable {
     public static <T, TInput> PageableResponse<T> create(
             final Page page,
             final Function<TInput, T> transformToViewModel
-            ) {
+    ) {
         return new PageableResponse<>(
                 new Pagination(
                         page.getNumber(),

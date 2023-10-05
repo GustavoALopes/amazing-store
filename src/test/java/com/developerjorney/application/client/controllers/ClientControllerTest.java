@@ -1,18 +1,17 @@
 package com.developerjorney.application.client.controllers;
 
-import com.developerjorney.application.base.dtos.DefaultResponse;
-import com.developerjorney.application.client.controllers.ClientController;
+import com.developerjorney.application.base.dtos.PageableResponse;
+import com.developerjorney.application.client.dtos.input.GetClientReportInput;
 import com.developerjorney.application.client.dtos.input.ImportClientInput;
+import com.developerjorney.application.client.dtos.input.RangeDateInput;
+import com.developerjorney.application.client.dtos.view.ClientReportView;
+import com.developerjorney.application.client.queries.ClientQuery;
 import com.developerjorney.application.client.usecases.ImportClientUseCase;
 import com.developerjorney.application.enums.ApiVersions;
-import com.developerjorney.configurations.NotificationPublisherConfig;
-import com.developerjorney.core.patterns.notification.NotificationPublisherInMemory;
-import com.developerjorney.core.patterns.notification.NotificationSubscriber;
 import com.developerjorney.core.patterns.notification.enums.NotificationTypeEnum;
 import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationSubscriber;
 import com.developerjorney.core.patterns.notification.models.Notification;
-import com.developerjorney.core.persistence.unitofwork.UnitOfWork;
 import com.developerjorney.domain.client.entities.validations.ImportClientDomainInputValidation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +24,8 @@ import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -32,12 +33,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.testcontainers.shaded.com.google.common.base.Functions;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
@@ -48,8 +47,14 @@ public class ClientControllerTest {
     private static final String URL = ApiVersions.V1 + "/clients";
 
     private static final String IMPORT_CLIENT = URL + "/import";
+
+    private static final String REPORT_CLIENT = URL + "/report";
+
     @Autowired
     private ClientController controller;
+
+    @MockBean
+    private ClientQuery query;
 
     @MockBean
     private ImportClientUseCase importClientUseCase;
@@ -61,6 +66,7 @@ public class ClientControllerTest {
 
     private final ObjectMapper mapper;
 
+
     public ClientControllerTest() {
         this.mapper = new ObjectMapper();
     }
@@ -68,6 +74,7 @@ public class ClientControllerTest {
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.controller)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .build();
     }
 
@@ -159,6 +166,53 @@ public class ClientControllerTest {
 //                    notificationMap.containsKey(notification.code())
 //            ).isTrue();
 //        });
+
+    }
+
+    @Test
+    public void shouldGetClientReport() throws Exception {
+        //Input
+        final var input = new GetClientReportInput(
+                "Client",
+                "A",
+                new RangeDateInput(
+                        "2000-12-01",
+                        "2001-12-01"
+                )
+        );
+
+        final var viewModel = PageableResponse.create(
+                0,
+                1,
+                20,
+                1,
+                Set.of(ClientReportView.create(
+                        UUID.randomUUID(),
+                        "Cliente",
+                        "A",
+                        "2000-12-01"
+                ))
+        );
+
+        //Mock
+        BDDMockito.given(this.query.report(
+            Mockito.any(GetClientReportInput.class),
+            Mockito.any(Pageable.class)
+        ))
+            .willReturn(viewModel);
+
+        //Execution
+        final var payload = this.mapper.writeValueAsString(input);
+        final var request = MockMvcRequestBuilders.get(REPORT_CLIENT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload);
+
+        final var client = viewModel.getContent().stream().findFirst().orElse(null);
+        this.mockMvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].name").value(client.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].lastName").value(client.getLastName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].birthdate").value(client.getBirthdate()));
 
     }
 }
