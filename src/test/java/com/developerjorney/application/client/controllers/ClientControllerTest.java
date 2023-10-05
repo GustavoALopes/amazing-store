@@ -36,6 +36,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
@@ -186,6 +187,7 @@ public class ClientControllerTest {
                 20,
                 1,
                 Set.of(ClientReportView.create(
+                        UUID.randomUUID(),
                         "Cliente",
                         "A",
                         "2000-12-01"

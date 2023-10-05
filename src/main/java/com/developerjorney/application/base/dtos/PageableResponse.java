@@ -57,7 +57,7 @@ public class PageableResponse<T> implements Serializable {
     public static <T, TInput> PageableResponse<T> create(
             final Page page,
             final Function<TInput, T> transformToViewModel
-            ) {
+    ) {
         return new PageableResponse<>(
                 new Pagination(
                         page.getNumber(),

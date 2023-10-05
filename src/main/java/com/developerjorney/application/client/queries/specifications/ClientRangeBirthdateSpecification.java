@@ -18,7 +18,7 @@ public class ClientRangeBirthdateSpecification implements Specification<Client> 
     private final LocalDate finalDate;
 
     public ClientRangeBirthdateSpecification(final RangeDateInput dates) {
-        if(this.checkIfNull(dates.initDate()) || this.checkIfNull(dates.finalDate())) {
+        if(Objects.isNull(dates) || this.checkIfNull(dates.initDate()) || this.checkIfNull(dates.finalDate())) {
             this.initDate = null;
             this.finalDate = null;
         } else {

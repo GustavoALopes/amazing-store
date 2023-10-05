@@ -20,6 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Set;
+import java.util.UUID;
 
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
@@ -52,6 +53,7 @@ public class ClientQueryTest {
                 20,
                 1,
                 Set.of(ClientReportView.create(
+                        UUID.randomUUID(),
                         "Client",
                         "A",
                         "2000-12-01"
