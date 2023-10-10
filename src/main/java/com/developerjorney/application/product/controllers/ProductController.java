@@ -10,6 +10,8 @@ import com.developerjorney.application.product.dtos.views.ProductViewModel;
 import com.developerjorney.application.product.queries.interfaces.IProductQuery;
 import com.developerjorney.application.product.usecases.CreateProductUseCase;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationSubscriber;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "Products")
 @RequestMapping(value = ApiVersions.V1 +  "/products")
 public class ProductController extends BaseController {
 
@@ -36,7 +39,7 @@ public class ProductController extends BaseController {
 
     @GetMapping
     public ResponseEntity<DefaultResponse<PageableResponse<ProductViewModel>>> getListProduct(
-            final @PageableDefault(size = 20) Pageable page
+            final @ParameterObject @PageableDefault(size = 20) Pageable page
     ) {
         final var result = this.query.getListProduct(page);
         return ResponseEntity.ok(result);

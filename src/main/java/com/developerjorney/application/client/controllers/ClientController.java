@@ -8,12 +8,18 @@ import com.developerjorney.application.client.queries.ClientQuery;
 import com.developerjorney.application.client.usecases.ImportClientUseCase;
 import com.developerjorney.application.enums.ApiVersions;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationSubscriber;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "Client")
 @RequestMapping(value = ApiVersions.V1 + "/clients")
 public class ClientController extends BaseController {
 
@@ -32,6 +38,20 @@ public class ClientController extends BaseController {
     }
 
     @PostMapping(value = "/import")
+    @Operation(
+            description = "Using this resource to import some Client.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            content = @Content,
+                            description = "Client has been registered"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Something need to be validate."
+                    )
+            }
+    )
     public ResponseEntity<DefaultResponse> importClient(
         final @RequestBody ImportClientInput input
     ) {
@@ -47,8 +67,8 @@ public class ClientController extends BaseController {
 
     @GetMapping(value = "/report")
     public ResponseEntity<DefaultResponse> report(
-            final @ModelAttribute GetClientReportInput input,
-            final @PageableDefault(size = 20) Pageable page
+            final @ParameterObject @ModelAttribute GetClientReportInput input,
+            final @ParameterObject @PageableDefault(size = 20) Pageable page
     ) {
         final var result = this.query.report(
                 input,
