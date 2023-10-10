@@ -32,6 +32,13 @@ public record ImportClientInput(
 
         @NotEmpty
         @Schema(
+                description = "The identifier of client",
+                example = "email@teste.com"
+        )
+        String email,
+
+        @NotEmpty
+        @Schema(
             description = "The client birthdate in ISO8601",
             example = "2000-12-01"
         )

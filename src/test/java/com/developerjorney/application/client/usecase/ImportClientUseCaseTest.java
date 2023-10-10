@@ -55,6 +55,7 @@ public class ImportClientUseCaseTest {
         final var input = new ImportClientInput(
                 "Cliente",
                 "A",
+                "email@test.com",
                 "2000-12-01"
         );
 
@@ -75,6 +76,7 @@ public class ImportClientUseCaseTest {
     public void shouldNotifyErrorsWhenTryInvalidInput() {
         //Input
         final var invalidInput = new ImportClientInput(
+                null,
                 null,
                 null,
                 null

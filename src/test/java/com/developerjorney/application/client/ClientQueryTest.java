@@ -41,6 +41,7 @@ public class ClientQueryTest {
         final var input = new GetClientReportInput(
                 "Cliente",
                 "A",
+                "email@test.com",
                 new RangeDateInput(
                         "2000-12-01",
                         "2002-12-01"
@@ -56,6 +57,7 @@ public class ClientQueryTest {
                         UUID.randomUUID(),
                         "Client",
                         "A",
+                        "email@test.com",
                         "2000-12-01"
                 ))
         );

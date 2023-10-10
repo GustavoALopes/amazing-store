@@ -21,11 +21,15 @@ public class Client extends BaseEntity implements IAggregateRoot {
     @Column(name = "lastName")
     private String lastName;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "birthdate")
     private LocalDate birthdate;
 
     @Transient
     private transient ImportClientDomainInputValidation importClientDomainInputValidation;
+
 
     public Client() {
         this.name = "";

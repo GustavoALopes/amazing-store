@@ -21,5 +21,11 @@ public record GetClientReportInput(
         )
         String lastName,
 
+        @Schema(
+                description = "The client identifier",
+                example = "email@test.com"
+        )
+        String email,
+
         RangeDateInput dates
 ) {}

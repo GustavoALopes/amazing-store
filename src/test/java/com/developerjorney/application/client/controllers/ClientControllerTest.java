@@ -34,6 +34,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -84,6 +85,7 @@ public class ClientControllerTest {
         final var input = new ImportClientInput(
                 "Cliente",
                 "A",
+                "email@test.com",
                 "2000-12-01"
         );
 
@@ -105,6 +107,7 @@ public class ClientControllerTest {
     public void shouldNotifyWhenTryCreateInvalidProduct() throws Exception {
         //Inputs
         final var invalidInput = new ImportClientInput(
+                null,
                 null,
                 null,
                 null
@@ -175,6 +178,7 @@ public class ClientControllerTest {
         final var input = new GetClientReportInput(
                 "Client",
                 "A",
+                "email@test.com",
                 new RangeDateInput(
                         "2000-12-01",
                         "2001-12-01"
@@ -190,6 +194,7 @@ public class ClientControllerTest {
                         UUID.randomUUID(),
                         "Cliente",
                         "A",
+                        "email@test.com",
                         "2000-12-01"
                 ))
         );
