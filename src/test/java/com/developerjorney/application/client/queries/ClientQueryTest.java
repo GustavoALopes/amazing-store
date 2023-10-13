@@ -1,10 +1,9 @@
-package com.developerjorney.application.client;
+package com.developerjorney.application.client.queries;
 
 import com.developerjorney.application.base.dtos.PageableResponse;
 import com.developerjorney.application.client.dtos.input.GetClientReportInput;
 import com.developerjorney.application.client.dtos.input.RangeDateInput;
 import com.developerjorney.application.client.dtos.view.ClientReportView;
-import com.developerjorney.application.client.queries.ClientQuery;
 import com.developerjorney.application.client.queries.repositories.IClientReadOnlyRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -57,13 +56,13 @@ public class ClientQueryTest {
                         UUID.randomUUID(),
                         "Client",
                         "A",
-                        "email@test.com",
-                        "2000-12-01"
+                        "2000-12-01",
+                        "email@test.com"
                 ))
         );
 
         //Mock
-        BDDMockito.given(this.repository.report(
+        BDDMockito.given(this.repository.list(
                 Mockito.any(Specification.class),
                 Mockito.any(Pageable.class)
         )).willReturn(viewModel);
@@ -82,5 +81,6 @@ public class ClientQueryTest {
         Assertions.assertThat(responseClient.getName()).isEqualTo(viewModelClient.getName());
         Assertions.assertThat(responseClient.getLastName()).isEqualTo(viewModelClient.getLastName());
         Assertions.assertThat(responseClient.getBirthdate()).isEqualTo(viewModelClient.getBirthdate());
+        Assertions.assertThat(responseClient.getEmail()).isEqualTo(viewModelClient.getEmail());
     }
 }

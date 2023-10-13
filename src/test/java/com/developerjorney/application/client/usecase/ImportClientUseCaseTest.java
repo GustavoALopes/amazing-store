@@ -94,12 +94,13 @@ public class ImportClientUseCaseTest {
         Assertions.assertThat(this.notificationSubscriber.hasNotification()).isTrue();
 
         final var notifications = this.notificationSubscriber.getNotifications();
-        Assertions.assertThat(notifications.size()).isEqualTo(3);
+        Assertions.assertThat(notifications.size()).isEqualTo(4);
 
         final var types = Map.of(
                 ImportClientDomainInputValidation.NAME_IS_REQUIRED, "",
                 ImportClientDomainInputValidation.LAST_NAME_IS_REQUIRED, "",
-                ImportClientDomainInputValidation.BIRTHDATE_IS_REQUIRED, ""
+                ImportClientDomainInputValidation.BIRTHDATE_IS_REQUIRED, "",
+                ImportClientDomainInputValidation.EMAIL_IS_INVALID, ""
         );
 
         notifications.forEach(notification -> {

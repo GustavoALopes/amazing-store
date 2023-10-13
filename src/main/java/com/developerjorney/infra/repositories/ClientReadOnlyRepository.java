@@ -21,7 +21,7 @@ public class ClientReadOnlyRepository implements IClientReadOnlyRepository {
     }
 
     @Override
-    public PageableResponse<ClientReportView> report(
+    public PageableResponse<ClientReportView> list(
             final Specification<Client> spec,
             final Pageable page
     ) {

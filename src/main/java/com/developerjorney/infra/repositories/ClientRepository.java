@@ -32,6 +32,8 @@ public class ClientRepository implements IClientRepository {
                 Client.class
         )
                 .setParameter("id", id)
-                .getSingleResult();
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
     }
 }

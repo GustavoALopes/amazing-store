@@ -194,8 +194,8 @@ public class ClientControllerTest {
                         UUID.randomUUID(),
                         "Cliente",
                         "A",
-                        "email@test.com",
-                        "2000-12-01"
+                        "2000-12-01",
+                        "email@test.com"
                 ))
         );
 
@@ -217,7 +217,8 @@ public class ClientControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].name").value(client.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].lastName").value(client.getLastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].birthdate").value(client.getBirthdate()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].birthdate").value(client.getBirthdate()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].email").value(client.getEmail()));
 
     }
 }

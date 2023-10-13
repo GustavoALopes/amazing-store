@@ -18,18 +18,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.request.RequestContextHolder;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @DataJpaTest
 @WebAppConfiguration
@@ -66,6 +64,7 @@ public class ClientReadOnlyRepositoryTest extends BasePostgreSQLContainer {
                 "Cliente",
                 "A",
                 "2000-12-01",
+                UUID.randomUUID() + "@test.com",
                 "NOT-IMPLEMENTED-YET"
         ));
 
@@ -79,7 +78,7 @@ public class ClientReadOnlyRepositoryTest extends BasePostgreSQLContainer {
                         "2001-12-01"
                 )));
 
-        final var result = this.repositoryReadOnly.report(
+        final var result = this.repositoryReadOnly.list(
                 specification,
                 Pageable.ofSize(20)
         );
@@ -89,10 +88,12 @@ public class ClientReadOnlyRepositoryTest extends BasePostgreSQLContainer {
         final var resultViewModel = result.getContent().stream()
                 .filter(filter -> Objects.equals(filter.getId(), client.getId()))
                 .findFirst().orElse(null);
+
         Assertions.assertThat(resultViewModel.getId()).isEqualTo(client.getId());
         Assertions.assertThat(resultViewModel.getName()).isEqualTo(client.getName());
         Assertions.assertThat(resultViewModel.getLastName()).isEqualTo(client.getLastName());
         Assertions.assertThat(resultViewModel.getBirthdate()).isEqualTo(client.getBirthdate().toString());
+        Assertions.assertThat(resultViewModel.getEmail()).isEqualTo(client.getEmail());
     }
 
     @Test
@@ -103,6 +104,7 @@ public class ClientReadOnlyRepositoryTest extends BasePostgreSQLContainer {
                 "Cliente",
                 "A",
                 "2000-12-01",
+                UUID.randomUUID() + "@test.com",
                 "NOT-IMPLEMENTED-YET"
         ));
 
@@ -113,7 +115,7 @@ public class ClientReadOnlyRepositoryTest extends BasePostgreSQLContainer {
                 .and(new ClientLastNameSpecification(null))
                 .and(new ClientRangeBirthdateSpecification(null));
 
-        final var result = this.repositoryReadOnly.report(
+        final var result = this.repositoryReadOnly.list(
                 specification,
                 Pageable.ofSize(20)
         );
@@ -128,6 +130,7 @@ public class ClientReadOnlyRepositoryTest extends BasePostgreSQLContainer {
         Assertions.assertThat(resultViewModel.getName()).isEqualTo(client.getName());
         Assertions.assertThat(resultViewModel.getLastName()).isEqualTo(client.getLastName());
         Assertions.assertThat(resultViewModel.getBirthdate()).isEqualTo(client.getBirthdate().toString());
+        Assertions.assertThat(resultViewModel.getEmail()).isEqualTo(client.getEmail());
     }
 
 }

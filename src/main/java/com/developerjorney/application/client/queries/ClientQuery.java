@@ -8,7 +8,6 @@ import com.developerjorney.application.client.queries.specifications.ClientLastN
 import com.developerjorney.application.client.queries.specifications.ClientNameSpecification;
 import com.developerjorney.application.client.queries.specifications.ClientRangeBirthdateSpecification;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,7 +27,7 @@ public class ClientQuery {
                 .and(new ClientLastNameSpecification(input.lastName()))
                 .and(new ClientRangeBirthdateSpecification(input.dates()));
 
-        return this.repository.report(
+        return this.repository.list(
                 spec,
                 page
         );

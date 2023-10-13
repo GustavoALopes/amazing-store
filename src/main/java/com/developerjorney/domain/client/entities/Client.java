@@ -4,6 +4,7 @@ import com.developerjorney.domain.base.entities.BaseEntity;
 import com.developerjorney.domain.base.entities.interfaces.IAggregateRoot;
 import com.developerjorney.domain.client.entities.inputs.ImportClientDomainInput;
 import com.developerjorney.domain.client.entities.validations.ImportClientDomainInputValidation;
+import com.developerjorney.domain.client.entities.valueobjects.EmailVO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
@@ -45,10 +46,16 @@ public class Client extends BaseEntity implements IAggregateRoot {
         }
 
         this.<Client>createNew(input.getCreatedBy())
+                .setIdentifier(input.getEmail())
                 .setClientName(input.getName(), input.getLastName())
                 .setBirthdate(input.getBirthdate());
 
         return true;
+    }
+
+    private Client setIdentifier(final EmailVO email) {
+        this.email = email.getValue();
+        return this;
     }
 
     private Client setBirthdate(final LocalDate birthdate) {

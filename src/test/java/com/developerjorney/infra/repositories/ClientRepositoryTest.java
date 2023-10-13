@@ -19,6 +19,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.util.UUID;
+
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
@@ -49,6 +51,7 @@ public class ClientRepositoryTest extends BasePostgreSQLContainer {
                 "Cliente",
                 "A",
                 "2000-12-01",
+                UUID.randomUUID() + "@test.com",
                 "NOT-IMPLEMENT-YET"
         ));
 
@@ -62,5 +65,6 @@ public class ClientRepositoryTest extends BasePostgreSQLContainer {
         Assertions.assertThat(result.getName()).isEqualTo(client.getName());
         Assertions.assertThat(result.getLastName()).isEqualTo(client.getLastName());
         Assertions.assertThat(result.getBirthdate()).isEqualTo(client.getBirthdate());
+        Assertions.assertThat(result.getEmail()).isEqualTo(client.getEmail());
     }
 }
