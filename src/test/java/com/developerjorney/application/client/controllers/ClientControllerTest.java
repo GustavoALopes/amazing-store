@@ -49,8 +49,6 @@ public class ClientControllerTest {
 
     private static final String IMPORT_CLIENT = URL + "/import";
 
-    private static final String REPORT_CLIENT = URL + "/report";
-
     @Autowired
     private ClientController controller;
 
@@ -208,7 +206,7 @@ public class ClientControllerTest {
 
         //Execution
         final var payload = this.mapper.writeValueAsString(input);
-        final var request = MockMvcRequestBuilders.get(REPORT_CLIENT)
+        final var request = MockMvcRequestBuilders.get(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload);
 
