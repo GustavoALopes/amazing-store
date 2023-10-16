@@ -4,6 +4,7 @@ import com.developerjorney.application.base.dtos.PageableResponse;
 import com.developerjorney.application.client.dtos.input.GetClientReportInput;
 import com.developerjorney.application.client.dtos.view.ClientReportView;
 import com.developerjorney.application.client.queries.repositories.IClientReadOnlyRepository;
+import com.developerjorney.application.client.queries.specifications.ClientEmailSpecification;
 import com.developerjorney.application.client.queries.specifications.ClientLastNameSpecification;
 import com.developerjorney.application.client.queries.specifications.ClientNameSpecification;
 import com.developerjorney.application.client.queries.specifications.ClientRangeBirthdateSpecification;
@@ -25,7 +26,8 @@ public class ClientQuery {
     ) {
         final var spec = new ClientNameSpecification(input.name())
                 .and(new ClientLastNameSpecification(input.lastName()))
-                .and(new ClientRangeBirthdateSpecification(input.dates()));
+                .and(new ClientRangeBirthdateSpecification(input.dates()))
+                .and(new ClientEmailSpecification(input.email()));
 
         return this.repository.list(
                 spec,
