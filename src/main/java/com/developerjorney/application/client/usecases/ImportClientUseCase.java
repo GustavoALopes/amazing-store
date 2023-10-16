@@ -22,6 +22,7 @@ public class ImportClientUseCase extends BaseUseCase<ImportClientInput, Boolean>
                 input.name(),
                 input.lastName(),
                 input.birthdate(),
+                input.email(),
                 "NOT-IMPLEMENT-YET"
         ));
     }

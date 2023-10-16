@@ -1,6 +1,5 @@
 package com.developerjorney.application.client.dtos.input;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -29,6 +28,13 @@ public record ImportClientInput(
         )
         String lastName,
 
+
+        @NotEmpty
+        @Schema(
+                description = "The identifier of client",
+                example = "email@teste.com"
+        )
+        String email,
 
         @NotEmpty
         @Schema(

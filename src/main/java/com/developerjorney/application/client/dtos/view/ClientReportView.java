@@ -12,6 +12,8 @@ public class ClientReportView {
 
     private final UUID id;
 
+    private final String email;
+
     private final String name;
 
     private final String lastName;
@@ -22,9 +24,11 @@ public class ClientReportView {
         final UUID id,
         final String name,
         final String lastName,
-        final LocalDate birthdate
+        final LocalDate birthdate,
+        final String email
     ) {
         this.id = id;
+        this.email = email;
         this.name = name;
         this.lastName = lastName;
         this.birthdate = birthdate.toString();
@@ -34,13 +38,15 @@ public class ClientReportView {
         final UUID id,
         final String name,
         final String lastName,
-        final LocalDate birthdate
+        final LocalDate birthdate,
+        final String email
     ) {
         return new ClientReportView(
                 id,
                 name,
                 lastName,
-                birthdate
+                birthdate,
+                email
         );
     }
 
@@ -48,13 +54,15 @@ public class ClientReportView {
             final UUID id,
             final String name,
             final String lastName,
-            final String birthdate
+            final String birthdate,
+            final String email
     ) {
         return create(
                 id,
                 name,
                 lastName,
-                LocalDate.parse(birthdate)
+                LocalDate.parse(birthdate),
+                email
         );
     }
 
@@ -65,7 +73,8 @@ public class ClientReportView {
                 client.getId(),
                 client.getName(),
                 client.getLastName(),
-                client.getBirthdate()
+                client.getBirthdate(),
+                client.getEmail()
         );
     }
 

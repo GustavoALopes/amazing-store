@@ -21,6 +21,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.util.UUID;
+
 @DataJpaTest
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
@@ -52,7 +54,7 @@ public class ProductReadOnlyRepositoryTest extends BasePostgreSQLContainer {
         final var product = new Product();
         product.create(
                 CreateProductDomainInput.create(
-                        "123456",
+                        UUID.randomUUID().toString(),
                         "Description XPTO",
                         "XPTO"
                 )

@@ -17,6 +17,8 @@ public class ImportClientDomainInputValidation extends BaseValidation<ImportClie
 
     public static final String BIRTHDATE_IS_REQUIRED = SUFFIX + "_BIRTHDATE_IS_REQUIRED";
 
+    public static final String EMAIL_IS_INVALID = SUFFIX + "_EMAIL_IS_INVALID";
+
     @Override
     public void internalValidate(final ImportClientDomainInput input) {
         if(Objects.isNull(input.getName()) || input.getName().isEmpty()) {
@@ -40,6 +42,14 @@ public class ImportClientDomainInputValidation extends BaseValidation<ImportClie
                     ValidateTypeEnum.ERROR,
                     BIRTHDATE_IS_REQUIRED,
                     "Data de nascimento obrigatória"
+            ));
+        }
+
+        if(!input.getEmail().isValid()) {
+            this.addMessage(ValidateMessage.create(
+                    ValidateTypeEnum.ERROR,
+                    EMAIL_IS_INVALID,
+                    "Email esta invalido, favor usar padrão email@dominio[.com][.org][.br]"
             ));
         }
     }

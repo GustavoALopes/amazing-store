@@ -65,7 +65,7 @@ public class ClientController extends BaseController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/report")
+    @GetMapping
     public ResponseEntity<DefaultResponse> report(
             final @ParameterObject @ModelAttribute GetClientReportInput input,
             final @ParameterObject @PageableDefault(size = 20) Pageable page

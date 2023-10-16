@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS client (
     name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     birthdate DATE NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
     created_by VARCHAR(100) NOT NULL,
     created_at timestamp NOT NULL,
     updated_by VARCHAR(100),

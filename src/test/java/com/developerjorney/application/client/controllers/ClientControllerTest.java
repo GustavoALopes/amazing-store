@@ -34,6 +34,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -47,8 +48,6 @@ public class ClientControllerTest {
     private static final String URL = ApiVersions.V1 + "/clients";
 
     private static final String IMPORT_CLIENT = URL + "/import";
-
-    private static final String REPORT_CLIENT = URL + "/report";
 
     @Autowired
     private ClientController controller;
@@ -84,6 +83,7 @@ public class ClientControllerTest {
         final var input = new ImportClientInput(
                 "Cliente",
                 "A",
+                "email@test.com",
                 "2000-12-01"
         );
 
@@ -105,6 +105,7 @@ public class ClientControllerTest {
     public void shouldNotifyWhenTryCreateInvalidProduct() throws Exception {
         //Inputs
         final var invalidInput = new ImportClientInput(
+                null,
                 null,
                 null,
                 null
@@ -175,6 +176,7 @@ public class ClientControllerTest {
         final var input = new GetClientReportInput(
                 "Client",
                 "A",
+                "email@test.com",
                 new RangeDateInput(
                         "2000-12-01",
                         "2001-12-01"
@@ -190,7 +192,8 @@ public class ClientControllerTest {
                         UUID.randomUUID(),
                         "Cliente",
                         "A",
-                        "2000-12-01"
+                        "2000-12-01",
+                        "email@test.com"
                 ))
         );
 
@@ -203,7 +206,7 @@ public class ClientControllerTest {
 
         //Execution
         final var payload = this.mapper.writeValueAsString(input);
-        final var request = MockMvcRequestBuilders.get(REPORT_CLIENT)
+        final var request = MockMvcRequestBuilders.get(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload);
 
@@ -212,7 +215,8 @@ public class ClientControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].name").value(client.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].lastName").value(client.getLastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].birthdate").value(client.getBirthdate()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].birthdate").value(client.getBirthdate()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].email").value(client.getEmail()));
 
     }
 }
