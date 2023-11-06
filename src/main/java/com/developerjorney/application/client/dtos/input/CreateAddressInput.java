@@ -2,7 +2,6 @@ package com.developerjorney.application.client.dtos.input;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record CreateAddressInput(
@@ -13,7 +12,7 @@ public record CreateAddressInput(
         String country,
 
         @NotEmpty
-        @Size(max = 2, min = 2)
+        @Size(max = 3, min = 3)
         @Schema(description = "The state of address", example = "RJ")
         String state,
 
@@ -41,6 +40,7 @@ public record CreateAddressInput(
         @Schema(description = "The zip code of address", example = "25030210")
         String zipCode,
 
+        @Size(min = 100)
         @Schema(description = "Addional details of address", example = "Apt123A")
         String details
 ) {};

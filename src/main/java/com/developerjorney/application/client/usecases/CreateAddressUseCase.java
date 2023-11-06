@@ -5,10 +5,13 @@ import com.developerjorney.core.persistence.unitofwork.interfaces.IUnitOfWork;
 import com.developerjorney.core.usecase.BaseUseCase;
 import com.developerjorney.domain.client.entities.inputs.CreateAddressDomainInput;
 import com.developerjorney.domain.client.service.interfaces.IClientService;
+import org.javatuples.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
-public class CreateAddressUseCase extends BaseUseCase<CreateAddressInput, Boolean> {
+public class CreateAddressUseCase extends BaseUseCase<Pair<UUID, CreateAddressInput>, Boolean> {
 
     private final IClientService service;
 
@@ -21,8 +24,14 @@ public class CreateAddressUseCase extends BaseUseCase<CreateAddressInput, Boolea
     }
 
     @Override
-    protected Boolean executeInternal(final CreateAddressInput input) {
+    protected Boolean executeInternal(
+        final Pair<UUID, CreateAddressInput> params
+    ) {
+        final var clientId = params.getValue0();
+        final var input = params.getValue1();
+
         return this.service.createAddress(CreateAddressDomainInput.create(
+                clientId,
                 input.country(),
                 input.state(),
                 input.city(),

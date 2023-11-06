@@ -1,6 +1,7 @@
 package com.developerjorney.domain.base.services;
 
 import com.developerjorney.core.patterns.notification.enums.NotificationTypeEnum;
+import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import com.developerjorney.core.patterns.notification.models.Notification;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationPublisher;
 import com.developerjorney.domain.base.entities.BaseEntity;
@@ -27,5 +28,9 @@ public abstract class BaseService<T extends IAggregateRoot> {
                 });
 
         return false;
+    }
+
+    protected void addNotification(final INotification notification) {
+        this.notificationPublisher.publisher(notification);
     }
 }
