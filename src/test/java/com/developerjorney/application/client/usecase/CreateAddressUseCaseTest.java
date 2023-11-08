@@ -8,6 +8,7 @@ import com.developerjorney.core.patterns.notification.NotificationPublisherInMem
 import com.developerjorney.core.patterns.notification.NotificationSubscriber;
 import com.developerjorney.core.persistence.unitofwork.UnitOfWork;
 import com.developerjorney.domain.client.entities.Client;
+import com.developerjorney.domain.client.entities.inputs.CreateAddressDomainInput;
 import com.developerjorney.domain.client.entities.inputs.ImportClientDomainInput;
 import com.developerjorney.domain.client.entities.validations.CreateAddressDomainInputValidation;
 import com.developerjorney.domain.client.repositories.IClientRepository;
@@ -52,7 +53,7 @@ public class CreateAddressUseCaseTest {
     private IClientRepository repository;
 
     @Test
-    public void shouldCreateAddress() {
+    public void shouldCreateAddressAsDefault() {
         //Input
         final var client = this.createClient();
 
@@ -97,6 +98,72 @@ public class CreateAddressUseCaseTest {
         Assertions.assertThat(addressResult.getZipCode()).isEqualTo(input.zipCode().replaceAll("[^\\d+]", ""));
         Assertions.assertThat(addressResult.getNumber()).isEqualTo(input.number());
         Assertions.assertThat(addressResult.getDetails()).isEqualTo(input.details());
+        Assertions.assertThat(addressResult.isDefault()).isTrue();
+    }
+
+    @Test
+    public void shouldCreateAddressAsNoDefault() {
+        //Input
+        final var client = this.createClient();
+        client.addAddress(CreateAddressDomainInput.create(
+                client.getId(),
+                "BR",
+                "RJ",
+                "City XPTO",
+                "Neighborhood XPTO",
+                "Street XPTO",
+                "832",
+                "89052-000",
+                "Details XPTO",
+                "NOT-IMPLEMETED"
+        ));
+
+        final var input = new CreateAddressInput(
+                "BR",
+                "RJ",
+                "Blumenau",
+                "Itoupava Norte",
+                "R. dois de setembro",
+                "832",
+                "89052-000",
+                "Proximo a Chevrolet"
+        );
+
+        //Mock
+
+        BDDMockito.given(this.repository.getById(client.getId()))
+                .willReturn(client);
+
+        //Execution
+        final var result = this.useCase.execute(
+                Pair.with(
+                        client.getId(),
+                        input
+                )
+        );
+
+        //Assertions
+        Assertions.assertThat(result).isTrue();
+
+        Mockito.verify(this.repository, Mockito.times(1)).persist(client);
+
+        Assertions.assertThat(client.getAddress()).isNotEmpty();
+
+        final var addressResult = client.getAddress().stream()
+                .filter(address -> address.isDefault() == false)
+                .findFirst()
+                .orElse(null);
+
+        Assertions.assertThat(addressResult.getId()).isNotNull();
+        Assertions.assertThat(addressResult.getCountry()).isEqualTo(input.country());
+        Assertions.assertThat(addressResult.getState()).isEqualTo(input.state());
+        Assertions.assertThat(addressResult.getCity()).isEqualTo(input.city());
+        Assertions.assertThat(addressResult.getNeighborhood()).isEqualTo(input.neighborhood());
+        Assertions.assertThat(addressResult.getStreet()).isEqualTo(input.street());
+        Assertions.assertThat(addressResult.getZipCode()).isEqualTo(input.zipCode().replaceAll("[^\\d+]", ""));
+        Assertions.assertThat(addressResult.getNumber()).isEqualTo(input.number());
+        Assertions.assertThat(addressResult.getDetails()).isEqualTo(input.details());
+        Assertions.assertThat(addressResult.isDefault()).isFalse();
     }
 
     @Test

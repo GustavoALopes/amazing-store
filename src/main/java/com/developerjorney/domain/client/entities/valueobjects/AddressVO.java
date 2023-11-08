@@ -40,7 +40,10 @@ public class AddressVO {
 
     private final String details;
 
+    private final boolean isDefault;
+
     private final InfoAuditVO infoAudit;
+
 
     public AddressVO() {
         this.id = null;
@@ -53,6 +56,7 @@ public class AddressVO {
         this.number = "";
         this.zipCode = "";
         this.details = "";
+        this.isDefault = false;
 
         this.infoAudit = new InfoAuditVO();
     }
@@ -68,6 +72,7 @@ public class AddressVO {
         final String number,
         final String zipCode,
         final String details,
+        final boolean isDefault,
         final String createdBy
     ) {
         this.id = id;
@@ -80,6 +85,7 @@ public class AddressVO {
         this.number = number;
         this.zipCode = zipCode;
         this.details = details;
+        this.isDefault = isDefault;
 
         this.infoAudit = InfoAuditVO.createNew(
                 createdBy
@@ -96,6 +102,7 @@ public class AddressVO {
             final String number,
             final String zipCode,
             final String details,
+            final boolean isDefault,
             final String createdBy
     ) {
         return new AddressVO(
@@ -109,6 +116,7 @@ public class AddressVO {
             number,
             zipCode,
             Optional.ofNullable(details).orElse(""),
+            isDefault,
             createdBy
         );
     }

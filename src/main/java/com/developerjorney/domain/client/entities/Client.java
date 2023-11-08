@@ -91,6 +91,7 @@ public class Client extends BaseEntity implements IAggregateRoot {
             return false;
         }
 
+        final var shouldBeDefault = this.address.isEmpty();
         final var address = AddressVO.create(
                 this,
                 input.getCountry(),
@@ -101,6 +102,7 @@ public class Client extends BaseEntity implements IAggregateRoot {
                 input.getNumber(),
                 input.getZipCode(),
                 input.getDetails(),
+                shouldBeDefault,
                 input.getCreatedBy()
         );
 
