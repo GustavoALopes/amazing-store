@@ -100,7 +100,8 @@ public class Client extends BaseEntity implements IAggregateRoot {
                 input.getStreet(),
                 input.getNumber(),
                 input.getZipCode(),
-                input.getDetails()
+                input.getDetails(),
+                input.getCreatedBy()
         );
 
         this.address.add(address);

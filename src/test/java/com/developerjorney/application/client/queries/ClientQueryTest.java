@@ -1,7 +1,7 @@
 package com.developerjorney.application.client.queries;
 
 import com.developerjorney.application.base.dtos.PageableResponse;
-import com.developerjorney.application.client.dtos.input.GetClientReportInput;
+import com.developerjorney.application.client.dtos.input.GetAllClientsInput;
 import com.developerjorney.application.client.dtos.input.RangeDateInput;
 import com.developerjorney.application.client.dtos.view.ClientReportView;
 import com.developerjorney.application.client.queries.repositories.IClientReadOnlyRepository;
@@ -37,7 +37,7 @@ public class ClientQueryTest {
     @Test
     public void shouldGetClientReport() {
         //Input
-        final var input = new GetClientReportInput(
+        final var input = new GetAllClientsInput(
                 "Cliente",
                 "A",
                 "email@test.com",

@@ -9,14 +9,24 @@ import java.util.UUID;
 public class CreateAddressDomainInput {
 
     private final UUID clientId;
+
     private final String country;
+
     private final String state;
+
     private final String city;
+
     private final String neighborhood;
+
     private final String street;
+
     private final String number;
+
     private final String zipCode;
+
     private final String details;
+
+    private final String createdBy;
 
     public CreateAddressDomainInput(
             final UUID clientId,
@@ -27,7 +37,8 @@ public class CreateAddressDomainInput {
             final String street,
             final String number,
             final String zipCode,
-            final String details
+            final String details,
+            final String createdBy
     ) {
         this.clientId = clientId;
         this.country = country;
@@ -38,6 +49,7 @@ public class CreateAddressDomainInput {
         this.number = number;
         this.zipCode = zipCode;
         this.details = details;
+        this.createdBy = createdBy;
     }
 
     public static CreateAddressDomainInput create(
@@ -49,7 +61,8 @@ public class CreateAddressDomainInput {
             final String street,
             final String number,
             final String zipCode,
-            final String details
+            final String details,
+            final String createdBy
     ) {
         final var cleanZipCode = clearNotNumber(zipCode);
 
@@ -62,7 +75,8 @@ public class CreateAddressDomainInput {
             street,
             number,
             cleanZipCode,
-            details
+            details,
+            createdBy
         );
     }
 

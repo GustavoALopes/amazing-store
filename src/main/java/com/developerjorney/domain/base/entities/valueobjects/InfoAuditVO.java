@@ -2,10 +2,12 @@ package com.developerjorney.domain.base.entities.valueobjects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.time.Instant;
 
+@Getter
 @Embeddable
 public class InfoAuditVO implements Serializable {
 

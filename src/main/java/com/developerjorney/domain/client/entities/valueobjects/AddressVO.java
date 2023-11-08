@@ -1,9 +1,8 @@
 package com.developerjorney.domain.client.entities.valueobjects;
 
+import com.developerjorney.domain.base.entities.valueobjects.InfoAuditVO;
 import com.developerjorney.domain.client.entities.Client;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.util.Objects;
@@ -12,22 +11,51 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@Table(name = AddressVO.TABLE_NAME)
 public class AddressVO {
+
+    public static final String TABLE_NAME = "address";
 
     @Id
     private final UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "client_id")
     private final Client client;
 
     private final String country;
+
     private final String state;
+
     private final String city;
+
     private final String neighborhood;
+
     private final String street;
+
     private final String number;
+
+    @Column(name = "zip_code")
     private final String zipCode;
+
     private final String details;
+
+    private final InfoAuditVO infoAudit;
+
+    public AddressVO() {
+        this.id = null;
+        this.client = null;
+        this.country = "";
+        this.state = "";
+        this.city = "";
+        this.neighborhood = "";
+        this.street = "";
+        this.number = "";
+        this.zipCode = "";
+        this.details = "";
+
+        this.infoAudit = new InfoAuditVO();
+    }
 
     public AddressVO(
         final UUID id,
@@ -39,7 +67,8 @@ public class AddressVO {
         final String street,
         final String number,
         final String zipCode,
-        final String details
+        final String details,
+        final String createdBy
     ) {
         this.id = id;
         this.client = client;
@@ -51,6 +80,10 @@ public class AddressVO {
         this.number = number;
         this.zipCode = zipCode;
         this.details = details;
+
+        this.infoAudit = InfoAuditVO.createNew(
+                createdBy
+        );
     }
 
     public static AddressVO create(
@@ -62,7 +95,8 @@ public class AddressVO {
             final String street,
             final String number,
             final String zipCode,
-            final String details
+            final String details,
+            final String createdBy
     ) {
         return new AddressVO(
             UUID.randomUUID(),
@@ -74,7 +108,8 @@ public class AddressVO {
             street,
             number,
             zipCode,
-            Optional.ofNullable(details).orElse("")
+            Optional.ofNullable(details).orElse(""),
+            createdBy
         );
     }
 

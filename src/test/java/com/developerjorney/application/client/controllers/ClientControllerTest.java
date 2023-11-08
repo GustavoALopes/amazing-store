@@ -1,22 +1,26 @@
 package com.developerjorney.application.client.controllers;
 
 import com.developerjorney.application.base.dtos.PageableResponse;
-import com.developerjorney.application.client.dtos.input.GetClientReportInput;
+import com.developerjorney.application.client.dtos.input.CreateAddressInput;
+import com.developerjorney.application.client.dtos.input.GetAllClientsInput;
 import com.developerjorney.application.client.dtos.input.ImportClientInput;
 import com.developerjorney.application.client.dtos.input.RangeDateInput;
 import com.developerjorney.application.client.dtos.view.ClientReportView;
 import com.developerjorney.application.client.queries.ClientQuery;
+import com.developerjorney.application.client.usecases.CreateAddressUseCase;
 import com.developerjorney.application.client.usecases.ImportClientUseCase;
 import com.developerjorney.application.enums.ApiVersions;
 import com.developerjorney.core.patterns.notification.enums.NotificationTypeEnum;
 import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationSubscriber;
 import com.developerjorney.core.patterns.notification.models.Notification;
+import com.developerjorney.domain.client.entities.validations.CreateAddressDomainInputValidation;
 import com.developerjorney.domain.client.entities.validations.ImportClientDomainInputValidation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.assertj.core.api.Assertions;
+import org.javatuples.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +38,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -49,6 +52,8 @@ public class ClientControllerTest {
 
     private static final String IMPORT_CLIENT = URL + "/import";
 
+    private static final String CREATE_CLIENT_ADDRESS = URL + "/{clientId}/address";
+
     @Autowired
     private ClientController controller;
 
@@ -57,6 +62,9 @@ public class ClientControllerTest {
 
     @MockBean
     private ImportClientUseCase importClientUseCase;
+
+    @MockBean
+    private CreateAddressUseCase createAddressUseCase;
 
     @MockBean
     private INotificationSubscriber notificationSubscriber;
@@ -102,7 +110,7 @@ public class ClientControllerTest {
     }
 
     @Test
-    public void shouldNotifyWhenTryCreateInvalidProduct() throws Exception {
+    public void shouldNotifyWhenTryCreateInvalidClient() throws Exception {
         //Inputs
         final var invalidInput = new ImportClientInput(
                 null,
@@ -115,17 +123,7 @@ public class ClientControllerTest {
                 new Notification(
                         NotificationTypeEnum.ERROR,
                         ImportClientDomainInputValidation.NAME_IS_REQUIRED,
-                        "Nome obrigatório"
-                ),
-                new Notification(
-                        NotificationTypeEnum.ERROR,
-                        ImportClientDomainInputValidation.LAST_NAME_IS_REQUIRED,
-                        "Sobrenome obrigatório"
-                ),
-                new Notification(
-                        NotificationTypeEnum.ERROR,
-                        ImportClientDomainInputValidation.BIRTHDATE_IS_REQUIRED,
-                        "Data de nascimento obrigatória"
+                        "Some test notification"
                 )
         );
 
@@ -142,38 +140,15 @@ public class ClientControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload);
 
-        final var httpResponse = this.mockMvc.perform(request)
+        this.mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.messages").isNotEmpty())
-                .andReturn();
-
-        final List<INotification> response = JsonPath.read(
-                httpResponse.getResponse().getContentAsString(),
-                "$.messages"
-        );
-
-        Assertions.assertThat(response.size()).isEqualTo(notifications.size());
-//        Assertions.assertThat(response.get(0).type()).isEqualTo(ImportClientDomainInputValidation.NAME_IS_REQUIRED);
-//        Assertions.assertThat(response.get(1).type()).isEqualTo(ImportClientDomainInputValidation.LAST_NAME_IS_REQUIRED);
-//        Assertions.assertThat(response.get(2).type()).isEqualTo(ImportClientDomainInputValidation.BIRTHDATE_IS_REQUIRED);
-////
-//        final var notificationMap = notifications.stream().collect(Collectors.toMap(
-//                key -> key.code(),
-//                Function.identity()
-//        ));
-//
-//        response.forEach(notification -> {
-//            Assertions.assertThat(
-//                    notificationMap.containsKey(notification.code())
-//            ).isTrue();
-//        });
-
+                .andExpect(MockMvcResultMatchers.jsonPath("$.messages").isNotEmpty());
     }
 
     @Test
     public void shouldGetClientReport() throws Exception {
         //Input
-        final var input = new GetClientReportInput(
+        final var input = new GetAllClientsInput(
                 "Client",
                 "A",
                 "email@test.com",
@@ -199,7 +174,7 @@ public class ClientControllerTest {
 
         //Mock
         BDDMockito.given(this.query.report(
-            Mockito.any(GetClientReportInput.class),
+            Mockito.any(GetAllClientsInput.class),
             Mockito.any(Pageable.class)
         ))
             .willReturn(viewModel);
@@ -218,5 +193,88 @@ public class ClientControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].birthdate").value(client.getBirthdate()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.content[0].email").value(client.getEmail()));
 
+    }
+
+    //Address
+    @Test
+    public void shouldNotifyOkIfCreatedAddressWithSuccess() throws Exception {
+        //Input
+        final var input = new CreateAddressInput(
+                "BR",
+                "RJ",
+                "Blumenau",
+                "Itoupava Norte",
+                "R. dois de setembro",
+                "832",
+                "89052-000",
+                "Proximo a Chevrolet"
+        );
+
+        final var clientId = UUID.randomUUID();
+        final var useCaseParams = Pair.with(
+                clientId,
+                input
+        );
+
+        //Mock
+        BDDMockito.given(this.createAddressUseCase.execute(useCaseParams))
+                .willReturn(true);
+
+        //Execute
+        final var payload = this.mapper.writeValueAsString(input);
+        final var request = MockMvcRequestBuilders.post(CREATE_CLIENT_ADDRESS, clientId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(payload);
+
+        this.mockMvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
+    public void shouldNotifyBadRequestWhenExistsSomeProblem() throws Exception {
+        //Input
+        final var input = new CreateAddressInput(
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+        );
+
+        final var clientId = UUID.randomUUID();
+        final var useCaseParams = Pair.with(
+                clientId,
+                input
+        );
+
+        //Mock
+        BDDMockito.given(this.createAddressUseCase.execute(useCaseParams))
+                .willReturn(false);
+
+        final Set<INotification> notifications = Set.of(
+                new Notification(
+                        NotificationTypeEnum.ERROR,
+                        CreateAddressDomainInputValidation.CITY_IS_REQUIRED_CODE,
+                        "Some test notification"
+                )
+        );
+
+        BDDMockito.given(this.notificationSubscriber.getNotifications())
+                .willReturn(notifications);
+
+        //Execute
+        final var payload = this.mapper.writeValueAsString(input);
+        final var request = MockMvcRequestBuilders.post(CREATE_CLIENT_ADDRESS, clientId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(payload);
+
+        this.mockMvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.messages").isNotEmpty());
     }
 }

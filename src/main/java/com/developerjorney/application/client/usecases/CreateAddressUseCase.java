@@ -39,7 +39,8 @@ public class CreateAddressUseCase extends BaseUseCase<Pair<UUID, CreateAddressIn
                 input.street(),
                 input.number(),
                 input.zipCode(),
-                input.details()
+                input.details(),
+                "NOT-IMPLEMENTED"
         ));
     }
 }
