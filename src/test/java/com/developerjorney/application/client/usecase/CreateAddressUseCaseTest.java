@@ -311,8 +311,4 @@ public class CreateAddressUseCaseTest {
         ));
         return client;
     }
-
-//    public CreateAddressInput createAddressInput() {
-//
-//    }
 }

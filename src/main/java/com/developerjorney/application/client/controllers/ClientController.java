@@ -9,11 +9,20 @@ import com.developerjorney.application.client.queries.ClientQuery;
 import com.developerjorney.application.client.usecases.CreateAddressUseCase;
 import com.developerjorney.application.client.usecases.ImportClientUseCase;
 import com.developerjorney.application.enums.ApiVersions;
+import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationSubscriber;
+import com.developerjorney.core.patterns.notification.models.Notification;
+import com.developerjorney.domain.client.entities.inputs.CreateAddressDomainInput;
+import com.developerjorney.domain.client.entities.validations.CreateAddressDomainInputValidation;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.StringToClassMapItem;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
+import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.EqualsAndHashCode;
 import org.javatuples.Pair;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -88,6 +97,44 @@ public class ClientController extends BaseController {
     }
 
     @PostMapping(value = "/{clientId}/address")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Address created", content = @Content),
+        @ApiResponse(
+                responseCode = "400",
+                description = "Some information need to be validate.<br/>" +
+                        "<b>The possibles codes are:</b><br/>" +
+                        "COUNTRY_IS_REQUIRED;<br/>" +
+                        "COUNTRY_IS_INVALID;<br/>" +
+                        "STATE_IS_REQUIRED;<br/>" +
+                        "STATE_IS_INVALID;<br/>" +
+                        "CITY_IS_REQUIRED;<br/>" +
+                        "NEIGHBORHOOD_IS_REQUIRED;<br/>" +
+                        "NEIGHBORHOOD_IS_BIGGEST_THAN_MAX_SIZE;<br/>" +
+                        "ZIP_CODE_IS_REQUIRED;<br/>" +
+                        "ZIP_CODE_IS_INVALID;<br/>" +
+                        "STREET_IS_REQUIRED;<br/>" +
+                        "STREET_IS_BIGGEST_THAN_MAX_SIZE;<br/>" +
+                        "NUMBER_IS_REQUIRED;<br/>",
+                useReturnTypeSchema = true,
+                content = @Content(
+                        schemaProperties = {
+                                @SchemaProperty(
+                                        name = "data",
+                                        schema = @Schema(
+                                                implementation = Object.class,
+                                                properties = {}
+                                        )
+                                ),
+                                @SchemaProperty(
+                                        name = "message",
+                                        schema = @Schema(
+                                                implementation = Notification.class,
+                                                required = true
+                                        )
+                                )
+                        }
+               ))
+    })
     public ResponseEntity<DefaultResponse> createAddress(
         final @PathVariable(name = "clientId") UUID clientId,
         final @RequestBody CreateAddressInput input
