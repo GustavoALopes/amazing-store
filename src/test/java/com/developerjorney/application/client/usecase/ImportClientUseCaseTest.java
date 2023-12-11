@@ -25,7 +25,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Map;
-import java.util.Set;
 
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
@@ -44,7 +43,7 @@ public class ImportClientUseCaseTest {
     private ImportClientUseCase useCase;
 
     @MockBean
-    private IClientRepository repository;
+    private IClientRepository clientRepository;
 
     @SpyBean
     private INotificationSubscriber notificationSubscriber;
@@ -56,11 +55,12 @@ public class ImportClientUseCaseTest {
                 "Cliente",
                 "A",
                 "email@test.com",
-                "2000-12-01"
+                "2000-12-01",
+                null
         );
 
         //Mock
-        BDDMockito.given(this.repository.persist(
+        BDDMockito.given(this.clientRepository.persist(
                 Mockito.any(Client.class)
         )).willReturn(true);
 
@@ -68,7 +68,40 @@ public class ImportClientUseCaseTest {
         final var result = this.useCase.execute(input);
 
         Assertions.assertThat(result).isTrue();
-        Mockito.verify(this.repository, Mockito.times(1))
+        Mockito.verify(this.clientRepository, Mockito.times(1))
+                .persist(Mockito.any(Client.class));
+    }
+
+    @Test
+    public void shouldImportClientAndClientAddress() {
+        //Input
+        final var input = new ImportClientInput(
+                "Cliente",
+                "A",
+                "email@test.com",
+                "2000-12-01",
+                new ImportClientInput.Address(
+                        "BR",
+                        "RJ",
+                        "City XPTO",
+                        "Neighborhood XPTO",
+                        "Street XPTO",
+                        "832",
+                        "89052-000",
+                        "Details XPTO"
+                )
+        );
+
+        //Mock
+        BDDMockito.given(this.clientRepository.persist(
+                Mockito.any(Client.class)
+        )).willReturn(true);
+
+        //Execution
+        final var result = this.useCase.execute(input);
+
+        Assertions.assertThat(result).isTrue();
+        Mockito.verify(this.clientRepository, Mockito.times(1))
                 .persist(Mockito.any(Client.class));
     }
 
@@ -76,6 +109,7 @@ public class ImportClientUseCaseTest {
     public void shouldNotifyErrorsWhenTryInvalidInput() {
         //Input
         final var invalidInput = new ImportClientInput(
+                null,
                 null,
                 null,
                 null,
@@ -87,7 +121,7 @@ public class ImportClientUseCaseTest {
 
         Assertions.assertThat(result).isFalse();
         Mockito.verify(
-                this.repository,
+                this.clientRepository,
                 Mockito.never()
         ).persist(Mockito.any(Client.class));
 

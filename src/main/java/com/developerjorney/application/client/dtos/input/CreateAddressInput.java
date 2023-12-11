@@ -32,7 +32,7 @@ public record CreateAddressInput(
         String street,
 
         @NotEmpty
-        @Size(min=1, max = 10)
+        @Size(min= 1, max = 10)
         @Schema(description = "The number of address", example = "686")
         String number,
 

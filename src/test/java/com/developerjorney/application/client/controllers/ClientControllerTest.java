@@ -92,7 +92,8 @@ public class ClientControllerTest {
                 "Cliente",
                 "A",
                 "email@test.com",
-                "2000-12-01"
+                "2000-12-01",
+                null
         );
 
         //Mock
@@ -113,6 +114,7 @@ public class ClientControllerTest {
     public void shouldNotifyWhenTryCreateInvalidClient() throws Exception {
         //Inputs
         final var invalidInput = new ImportClientInput(
+                null,
                 null,
                 null,
                 null,

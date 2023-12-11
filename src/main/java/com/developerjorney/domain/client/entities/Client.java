@@ -15,6 +15,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -62,6 +63,10 @@ public class Client extends BaseEntity implements IAggregateRoot {
                 .setIdentifier(input.getEmail())
                 .setClientName(input.getName(), input.getLastName())
                 .setBirthdate(input.getBirthdate());
+
+        if(Objects.nonNull(input.getAddress())) {
+            this.addAddress(input.getAddress());
+        }
 
         return true;
     }
