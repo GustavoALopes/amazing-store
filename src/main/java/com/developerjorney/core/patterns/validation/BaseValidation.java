@@ -6,6 +6,7 @@ import com.developerjorney.core.patterns.validation.models.ValidateResult;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 public abstract class BaseValidation<T> implements IValidation<T> {
 
@@ -25,5 +26,9 @@ public abstract class BaseValidation<T> implements IValidation<T> {
 
     protected void addMessage(final ValidateMessage message) {
         this.messages.add(message);
+    }
+
+    protected boolean stringIsNullOrEmpty(final String value) {
+        return Objects.isNull(value) || value.isEmpty();
     }
 }

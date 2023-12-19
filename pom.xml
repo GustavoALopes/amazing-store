@@ -21,6 +21,7 @@
         <springdoc.version>2.2.0</springdoc.version>
         <flyway.version>9.22.1</flyway.version>
         <postgresql.version>42.6.0</postgresql.version>
+        <javatuples.version>1.2</javatuples.version>
     </properties>
 
     <dependencies>
@@ -43,6 +44,14 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.javatuples</groupId>
+            <artifactId>javatuples</artifactId>
+            <version>${javatuples.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

@@ -28,7 +28,7 @@ public class MockUnitOfWork {
         final var transactionMock = Mockito.mock(Transaction.class);
 
         Mockito.when(managerMock.getTransaction()).thenReturn(transactionMock);
-        Mockito.when(transactionMock.isActive()).thenReturn(false, true, false, true);
+        Mockito.when(transactionMock.isActive()).thenReturn(false, true, false, true, false, true, false, true, false, true);
 
         Mockito.when(mock.createEntityManager()).thenReturn(managerMock);
 

@@ -18,12 +18,27 @@ public class ImportClientUseCase extends BaseUseCase<ImportClientInput, Boolean>
 
     @Override
     protected Boolean executeInternal(final ImportClientInput input) {
-        return this.service.importClient(ImportClientDomainInput.create(
-                input.name(),
-                input.lastName(),
-                input.birthdate(),
-                input.email(),
-                "NOT-IMPLEMENT-YET"
-        ));
+        return this.service.importClient(
+            ImportClientDomainInput.builder()
+                .addClientInformation(
+                    ImportClientDomainInput.Builder.ClientInfoBuilder.builder()
+                        .name(input.name())
+                        .lastName(input.lastName())
+                        .birthdate(input.birthdate())
+                        .email(input.email())
+                )
+                .addAddressInformation(
+                    ImportClientDomainInput.Builder.AddressInfoBuilder.builder()
+                        .country(input.address().country())
+                        .state(input.address().state())
+                        .city(input.address().city())
+                        .neighborhood(input.address().neighborhood())
+                        .street(input.address().street())
+                        .number(input.address().number())
+                        .zipCode(input.address().zipCode())
+                        .details(input.address().details())
+                )
+            .build()
+        );
     }
 }

@@ -1,7 +1,7 @@
 package com.developerjorney.application.client.queries;
 
 import com.developerjorney.application.base.dtos.PageableResponse;
-import com.developerjorney.application.client.dtos.input.GetClientReportInput;
+import com.developerjorney.application.client.dtos.input.GetAllClientsInput;
 import com.developerjorney.application.client.dtos.view.ClientReportView;
 import com.developerjorney.application.client.queries.repositories.IClientReadOnlyRepository;
 import com.developerjorney.application.client.queries.specifications.ClientEmailSpecification;
@@ -21,7 +21,7 @@ public class ClientQuery {
     }
 
     public PageableResponse<ClientReportView> report(
-            final GetClientReportInput input,
+            final GetAllClientsInput input,
             final Pageable page
     ) {
         final var spec = new ClientNameSpecification(input.name())

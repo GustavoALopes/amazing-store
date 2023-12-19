@@ -2,6 +2,8 @@ package com.developerjorney.application.base.dtos;
 
 import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperties;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -15,6 +17,7 @@ public class DefaultResponse<T> implements Serializable {
 
     protected final T data;
 
+    @Schema(name = "message", description = "Messages can be info, warnings or errors notifications")
     protected final Set<INotification> messages;
 
     public DefaultResponse() {
