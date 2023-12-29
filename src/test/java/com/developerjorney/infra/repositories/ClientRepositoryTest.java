@@ -37,8 +37,7 @@ import java.util.UUID;
 })
 @EnableJpaRepositories(value = {"com.developerjorney.infra.repositories.*"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ClientRepositoryTest {
-//        extends BasePostgreSQLContainer {
+public class ClientRepositoryTest extends BasePostgreSQLContainer {
 
     @Autowired
     private IClientRepository repository;
@@ -91,9 +90,9 @@ public class ClientRepositoryTest {
         Assertions.assertThat(result.getEmail()).isEqualTo(client.getEmail());
 
         //Address
-        Assertions.assertThat(result.getAddress()).isNotEmpty();
+        Assertions.assertThat(result.getAddresses()).isNotEmpty();
 
-        final var address = result.getAddress().stream().findFirst().orElse(null);
+        final var address = result.getAddresses().stream().findFirst().orElse(null);
         Assertions.assertThat(address.getId()).isNotNull();
         Assertions.assertThat(address.getCountry()).isEqualTo(addressInput.getCountry());
         Assertions.assertThat(address.getCity()).isEqualTo(addressInput.getCity());

@@ -4,6 +4,7 @@ import com.developerjorney.application.base.dtos.DefaultResponse;
 import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationSubscriber;
 
+import java.util.Objects;
 import java.util.Set;
 
 public abstract class BaseController {
@@ -23,5 +24,14 @@ public abstract class BaseController {
                 "Something wrong happen",
                 this.subscriber.getNotifications()
         );
+    }
+
+    protected boolean checkIfCodeExists(final String code) {
+        return this.getNotifications().stream().filter(notification -> {
+            return Objects.equals(notification.code(), code);
+        })
+                .findFirst()
+                .map(value -> true)
+                .orElse(false);
     }
 }

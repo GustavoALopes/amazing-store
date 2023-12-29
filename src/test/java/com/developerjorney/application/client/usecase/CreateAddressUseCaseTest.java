@@ -86,9 +86,9 @@ public class CreateAddressUseCaseTest {
 
         Mockito.verify(this.repository, Mockito.times(1)).persist(client);
 
-        Assertions.assertThat(client.getAddress()).isNotEmpty();
+        Assertions.assertThat(client.getAddresses()).isNotEmpty();
 
-        final var addressResult = client.getAddress().stream().findFirst().orElse(null);
+        final var addressResult = client.getAddresses().stream().findFirst().orElse(null);
         Assertions.assertThat(addressResult.getId()).isNotNull();
         Assertions.assertThat(addressResult.getCountry()).isEqualTo(input.country());
         Assertions.assertThat(addressResult.getState()).isEqualTo(input.state());
@@ -147,9 +147,9 @@ public class CreateAddressUseCaseTest {
 
         Mockito.verify(this.repository, Mockito.times(1)).persist(client);
 
-        Assertions.assertThat(client.getAddress()).isNotEmpty();
+        Assertions.assertThat(client.getAddresses()).isNotEmpty();
 
-        final var addressResult = client.getAddress().stream()
+        final var addressResult = client.getAddresses().stream()
                 .filter(address -> address.isDefault() == false)
                 .findFirst()
                 .orElse(null);

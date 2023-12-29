@@ -1,8 +1,12 @@
 package com.developerjorney.application.client.dtos.input;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.time.LocalDate;
 
 public record ImportClientInput(
 
@@ -36,13 +40,14 @@ public record ImportClientInput(
         )
         String email,
 
-        @NotEmpty
+        @NotNull
         @Schema(
             description = "The client birthdate in ISO8601",
             example = "2000-12-01"
         )
-        String birthdate,
+        LocalDate birthdate,
 
+        @Valid
         Address address
 ) {
 
