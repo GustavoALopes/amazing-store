@@ -87,13 +87,7 @@ public class ImportClientDomainInput {
         }
 
         public ImportClientDomainInput build() {
-            return new ImportClientDomainInput(
-                this.clientInfo.getName(),
-                this.clientInfo.getLastName(),
-                this.clientInfo.getBirthdate(),
-                this.clientInfo.getEmail(),
-                this.createdBy,
-                new CreateAddressDomainInput(
+            final var addressDomainInput = Objects.nonNull(this.addressInfo) ? new CreateAddressDomainInput(
                     null,
                     this.addressInfo.getCountry(),
                     this.addressInfo.getState(),
@@ -104,7 +98,15 @@ public class ImportClientDomainInput {
                     this.addressInfo.getZipCode(),
                     this.addressInfo.getDetails(),
                     this.createdBy
-                )
+            ) : null;
+
+            return new ImportClientDomainInput(
+                this.clientInfo.getName(),
+                this.clientInfo.getLastName(),
+                this.clientInfo.getBirthdate(),
+                this.clientInfo.getEmail(),
+                this.createdBy,
+                addressDomainInput
             );
         }
 
@@ -131,8 +133,8 @@ public class ImportClientDomainInput {
                 this.lastName = lastName;
                 return this;
             }
-            public ClientInfoBuilder birthdate(final String birthdate) {
-                this.birthdate = LocalDate.parse(birthdate);
+            public ClientInfoBuilder birthdate(final LocalDate birthdate) {
+                this.birthdate = birthdate;
                 return this;
             }
             public ClientInfoBuilder email(final String email) {

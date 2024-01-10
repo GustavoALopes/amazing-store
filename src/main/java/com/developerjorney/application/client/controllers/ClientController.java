@@ -9,20 +9,17 @@ import com.developerjorney.application.client.queries.ClientQuery;
 import com.developerjorney.application.client.usecases.CreateAddressUseCase;
 import com.developerjorney.application.client.usecases.ImportClientUseCase;
 import com.developerjorney.application.enums.ApiVersions;
-import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationSubscriber;
 import com.developerjorney.core.patterns.notification.models.Notification;
-import com.developerjorney.domain.client.entities.inputs.CreateAddressDomainInput;
-import com.developerjorney.domain.client.entities.validations.CreateAddressDomainInputValidation;
+import com.developerjorney.domain.client.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.StringToClassMapItem;
-import io.swagger.v3.oas.annotations.extensions.Extension;
-import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
-import io.swagger.v3.oas.annotations.media.*;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.EqualsAndHashCode;
+import jakarta.validation.Valid;
 import org.javatuples.Pair;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +27,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -72,16 +71,30 @@ public class ClientController extends BaseController {
             }
     )
     public ResponseEntity<DefaultResponse> importClient(
-        final @RequestBody ImportClientInput input
+        final @Valid @RequestBody ImportClientInput input
     ) {
+
         final var result = this.importClientUseCase.execute(input);
-        if(!result) {
+
+        if(result.isFail()) {
+            if(this.checkIfCodeExists(ClientService.CLIENT_ALREADY_EXISTS_CODE)) {
+                return ResponseEntity.unprocessableEntity().body(
+                        this.getNotificationsResponse()
+                );
+            }
+
             return ResponseEntity.badRequest().body(
                     this.getNotificationsResponse()
             );
         }
 
-        return ResponseEntity.noContent().build();
+        final var client = result.getData();
+        final var resourceCreated = ServletUriComponentsBuilder.fromCurrentServletMapping()
+                .path("/api/v1/clients/{id}")
+                .buildAndExpand(client.getId())
+                .toUriString();
+
+        return ResponseEntity.created(URI.create(resourceCreated)).build();
     }
 
     @GetMapping
@@ -89,10 +102,15 @@ public class ClientController extends BaseController {
             final @ParameterObject @ModelAttribute GetAllClientsInput input,
             final @ParameterObject @PageableDefault(size = 20) Pageable page
     ) {
-        final var result = this.query.report(
+        final var result = this.query.listAll(
                 input,
                 page
         );
+
+        if(result.getContent().isEmpty()) {
+            return  ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(DefaultResponse.create(result));
     }
 

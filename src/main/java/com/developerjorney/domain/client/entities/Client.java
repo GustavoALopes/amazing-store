@@ -1,7 +1,5 @@
 package com.developerjorney.domain.client.entities;
 
-import ch.qos.logback.core.BasicStatusManager;
-import com.developerjorney.core.patterns.validation.BaseValidation;
 import com.developerjorney.domain.base.entities.BaseEntity;
 import com.developerjorney.domain.base.entities.interfaces.IAggregateRoot;
 import com.developerjorney.domain.client.entities.inputs.CreateAddressDomainInput;
@@ -17,6 +15,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -35,7 +34,7 @@ public class Client extends BaseEntity implements IAggregateRoot {
     private LocalDate birthdate;
 
     @OneToMany(mappedBy = "client", cascade = {CascadeType.ALL})
-    private Set<AddressVO> address;
+    private Set<AddressVO> addresses;
 
     @Transient
     private final transient ImportClientDomainInputValidation importClientDomainInputValidation;
@@ -47,7 +46,26 @@ public class Client extends BaseEntity implements IAggregateRoot {
     public Client() {
         this.name = "";
         this.lastName = "";
-        this.address = new HashSet<>();
+        this.addresses = new HashSet<>();
+        this.importClientDomainInputValidation = new ImportClientDomainInputValidation();
+        this.createAddressDomainInputValidation = new CreateAddressDomainInputValidation();
+    }
+
+    private Client(
+        final UUID id,
+        final String name,
+        final String lastName,
+        final String email,
+        final LocalDate birthdate,
+        final Set<AddressVO> addresses
+    ) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.email = email;
+        this.birthdate = birthdate;
+        this.addresses = addresses;
+
         this.importClientDomainInputValidation = new ImportClientDomainInputValidation();
         this.createAddressDomainInputValidation = new CreateAddressDomainInputValidation();
     }
@@ -96,7 +114,7 @@ public class Client extends BaseEntity implements IAggregateRoot {
             return false;
         }
 
-        final var shouldBeDefault = this.address.isEmpty();
+        final var shouldBeDefault = this.addresses.isEmpty();
         final var address = AddressVO.create(
                 this,
                 input.getCountry(),
@@ -111,8 +129,26 @@ public class Client extends BaseEntity implements IAggregateRoot {
                 input.getCreatedBy()
         );
 
-        this.address.add(address);
+        this.addresses.add(address);
 
         return true;
+    }
+
+    public static Client fromExistClient(
+        final UUID id,
+        final String name,
+        final String lastName,
+        final String email,
+        final LocalDate birthdate,
+        final Set<AddressVO> addresses
+    ) {
+        return new Client(
+            id,
+            name,
+            lastName,
+            email,
+            birthdate,
+            addresses
+        );
     }
 }

@@ -9,13 +9,16 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 @Getter
 @MappedSuperclass
-public class BaseEntity {
+public class BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1;
 
     @Id
     protected UUID id;

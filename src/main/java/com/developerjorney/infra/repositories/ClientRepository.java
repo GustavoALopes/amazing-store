@@ -2,7 +2,9 @@ package com.developerjorney.infra.repositories;
 
 import com.developerjorney.core.persistence.unitofwork.interfaces.IUnitOfWork;
 import com.developerjorney.domain.client.entities.Client;
+import com.developerjorney.domain.client.entities.valueobjects.EmailVO;
 import com.developerjorney.domain.client.repositories.IClientRepository;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
@@ -35,5 +37,21 @@ public class ClientRepository implements IClientRepository {
                 .getResultStream()
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public boolean existsByEmail(final EmailVO email) {
+        if(!email.isValid()) return false;
+
+        return this.unitOfWork.getEntityManager().createQuery(
+                "SELECT true " +
+                "FROM Client c " +
+                "WHERE c.email = :email",
+                boolean.class
+        )
+                .setParameter("email", email.getValue())
+                .getResultStream()
+                .findFirst()
+                .orElse(false);
     }
 }

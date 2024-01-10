@@ -1,7 +1,6 @@
 package com.developerjorney.infra.repositories;
 
 import com.developerjorney.BasePostgreSQLContainer;
-import com.developerjorney.application.client.dtos.input.RangeDateInput;
 import com.developerjorney.application.client.queries.repositories.IClientReadOnlyRepository;
 import com.developerjorney.application.client.queries.specifications.ClientLastNameSpecification;
 import com.developerjorney.application.client.queries.specifications.ClientNameSpecification;
@@ -26,6 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -39,7 +39,7 @@ import java.util.UUID;
         RequestScopeCDI.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ClientReadOnlyRepositoryTest extends BasePostgreSQLContainer {
+class ClientReadOnlyRepositoryTest extends BasePostgreSQLContainer {
 
     @Autowired
     private IClientReadOnlyRepository repositoryReadOnly;
@@ -73,12 +73,12 @@ public class ClientReadOnlyRepositoryTest extends BasePostgreSQLContainer {
 
         final var specification = new ClientNameSpecification(client.getName())
                 .and(new ClientLastNameSpecification(client.getLastName()))
-                .and(new ClientRangeBirthdateSpecification(new RangeDateInput(
-                        "2000-12-01",
-                        "2001-12-01"
-                )));
+                .and(new ClientRangeBirthdateSpecification(
+                        LocalDate.parse("2000-12-01"),
+                        LocalDate.parse("2001-12-01")
+                ));
 
-        final var result = this.repositoryReadOnly.list(
+        final var result = this.repositoryReadOnly.listAll(
                 specification,
                 Pageable.ofSize(20)
         );
@@ -113,9 +113,9 @@ public class ClientReadOnlyRepositoryTest extends BasePostgreSQLContainer {
 
         final var specification = new ClientNameSpecification(null)
                 .and(new ClientLastNameSpecification(null))
-                .and(new ClientRangeBirthdateSpecification(null));
+                .and(new ClientRangeBirthdateSpecification(null, null));
 
-        final var result = this.repositoryReadOnly.list(
+        final var result = this.repositoryReadOnly.listAll(
                 specification,
                 Pageable.ofSize(20)
         );

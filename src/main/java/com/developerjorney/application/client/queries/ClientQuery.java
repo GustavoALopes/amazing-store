@@ -20,16 +20,16 @@ public class ClientQuery {
         this.repository = repository;
     }
 
-    public PageableResponse<ClientReportView> report(
+    public PageableResponse<ClientReportView> listAll(
             final GetAllClientsInput input,
             final Pageable page
     ) {
         final var spec = new ClientNameSpecification(input.name())
                 .and(new ClientLastNameSpecification(input.lastName()))
-                .and(new ClientRangeBirthdateSpecification(input.dates()))
+                .and(new ClientRangeBirthdateSpecification(input.initDate(), input.finalDate()))
                 .and(new ClientEmailSpecification(input.email()));
 
-        return this.repository.list(
+        return this.repository.listAll(
                 spec,
                 page
         );

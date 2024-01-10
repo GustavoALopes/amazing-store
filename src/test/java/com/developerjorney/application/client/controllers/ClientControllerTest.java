@@ -1,25 +1,25 @@
 package com.developerjorney.application.client.controllers;
 
+import com.developerjorney.BaseTest;
 import com.developerjorney.application.base.dtos.PageableResponse;
 import com.developerjorney.application.client.dtos.input.CreateAddressInput;
 import com.developerjorney.application.client.dtos.input.GetAllClientsInput;
 import com.developerjorney.application.client.dtos.input.ImportClientInput;
-import com.developerjorney.application.client.dtos.input.RangeDateInput;
 import com.developerjorney.application.client.dtos.view.ClientReportView;
 import com.developerjorney.application.client.queries.ClientQuery;
 import com.developerjorney.application.client.usecases.CreateAddressUseCase;
 import com.developerjorney.application.client.usecases.ImportClientUseCase;
 import com.developerjorney.application.enums.ApiVersions;
+import com.developerjorney.application.exceptions.GlobalExceptionHandler;
 import com.developerjorney.core.patterns.notification.enums.NotificationTypeEnum;
 import com.developerjorney.core.patterns.notification.interfaces.INotification;
 import com.developerjorney.core.patterns.notification.interfaces.INotificationSubscriber;
 import com.developerjorney.core.patterns.notification.models.Notification;
+import com.developerjorney.core.patterns.result.ProcessResult;
 import com.developerjorney.domain.client.entities.validations.CreateAddressDomainInputValidation;
 import com.developerjorney.domain.client.entities.validations.ImportClientDomainInputValidation;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-import org.assertj.core.api.Assertions;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.javatuples.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -73,14 +73,18 @@ public class ClientControllerTest {
 
     private final ObjectMapper mapper;
 
+    private final BaseTest baseTest;
 
     public ClientControllerTest() {
-        this.mapper = new ObjectMapper();
+        this.mapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule());
+        this.baseTest = new BaseTest();
     }
 
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.controller)
+                .setControllerAdvice(new GlobalExceptionHandler())
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .build();
     }
@@ -92,13 +96,14 @@ public class ClientControllerTest {
                 "Cliente",
                 "A",
                 "email@test.com",
-                "2000-12-01",
+                LocalDate.parse("2000-12-01"),
                 null
         );
+        final var client = this.baseTest.makeClient(input);
 
         //Mock
         BDDMockito.given(this.importClientUseCase.execute(Mockito.eq(input)))
-                .willReturn(true);
+                .willReturn(ProcessResult.success(client));
 
         //Execution
         final var payload = this.mapper.writeValueAsString(input);
@@ -107,31 +112,34 @@ public class ClientControllerTest {
                 .content(payload);
 
         this.mockMvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().exists("Location"));
     }
 
     @Test
     public void shouldNotifyWhenTryCreateInvalidClient() throws Exception {
         //Inputs
         final var invalidInput = new ImportClientInput(
-                null,
-                null,
-                null,
-                null,
+                "nomeXPTO",
+                "lastNameXPTO",
+                "emailXPTO",
+                LocalDate.parse("2000-12-01"),
                 null
         );
+
+        final var message = "Some test notification";
 
         final Set<INotification> notifications = Set.of(
                 new Notification(
                         NotificationTypeEnum.ERROR,
                         ImportClientDomainInputValidation.NAME_IS_REQUIRED,
-                        "Some test notification"
+                        message
                 )
         );
 
         //Mock
         BDDMockito.given(this.importClientUseCase.execute(invalidInput))
-                .willReturn(false);
+                .willReturn(ProcessResult.fail());
 
         BDDMockito.given(this.notificationSubscriber.getNotifications())
                 .willReturn(notifications);
@@ -144,7 +152,10 @@ public class ClientControllerTest {
 
         this.mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.messages").isNotEmpty());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.messages").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.messages[0].type").value(NotificationTypeEnum.ERROR.name()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.messages[0].code").value(ImportClientDomainInputValidation.NAME_IS_REQUIRED))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.messages[0].message").value(message));
     }
 
     @Test
@@ -154,10 +165,8 @@ public class ClientControllerTest {
                 "Client",
                 "A",
                 "email@test.com",
-                new RangeDateInput(
-                        "2000-12-01",
-                        "2001-12-01"
-                )
+                LocalDate.parse("2000-12-01"),
+                LocalDate.parse("2001-12-01")
         );
 
         final var viewModel = PageableResponse.create(
@@ -175,7 +184,7 @@ public class ClientControllerTest {
         );
 
         //Mock
-        BDDMockito.given(this.query.report(
+        BDDMockito.given(this.query.listAll(
             Mockito.any(GetAllClientsInput.class),
             Mockito.any(Pageable.class)
         ))

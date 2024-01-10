@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public interface IClientReadOnlyRepository {
 
-    PageableResponse<ClientReportView> list(
+    PageableResponse<ClientReportView> listAll(
             final Specification<Client> spec,
             final Pageable page
     );

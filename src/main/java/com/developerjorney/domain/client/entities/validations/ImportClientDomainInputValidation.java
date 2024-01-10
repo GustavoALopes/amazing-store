@@ -13,11 +13,17 @@ public class ImportClientDomainInputValidation extends BaseValidation<ImportClie
 
     public static final String NAME_IS_REQUIRED = SUFFIX + "_NAME_IS_REQUIRED";
 
+    public static final String NAME_IS_BIGGEST_THAN_MAX_SIZE = SUFFIX + "_NAME_IS_BIGGEST_THAN_MAX_SIZE";
+
     public static final String LAST_NAME_IS_REQUIRED = SUFFIX + "_LAST_NAME_IS_REQUIRED";
+
+    public static final String LAST_NAME_IS_BIGGEST_THAN_MAX_SIZE = SUFFIX + "_LAST_NAME_IS_BIGGEST_THAN_MAX_SIZE";
 
     public static final String BIRTHDATE_IS_REQUIRED = SUFFIX + "_BIRTHDATE_IS_REQUIRED";
 
     public static final String EMAIL_IS_INVALID = SUFFIX + "_EMAIL_IS_INVALID";
+
+    public static final String EMAIL_IS_BIGGEST_THAN_MAX_SIZE = SUFFIX + "_EMAIL_IS_BIGGEST_THAN_MAX_SIZE";
 
     @Override
     public void internalValidate(final ImportClientDomainInput input) {
@@ -29,11 +35,27 @@ public class ImportClientDomainInputValidation extends BaseValidation<ImportClie
             ));
         }
 
+        if (Objects.nonNull(input.getName()) && input.getName().length() > 100) {
+            this.addMessage(ValidateMessage.create(
+                    ValidateTypeEnum.ERROR,
+                    NAME_IS_BIGGEST_THAN_MAX_SIZE,
+                    "O tamanho máximo para nome é 100 caracteres"
+            ));
+        }
+
         if(Objects.isNull(input.getLastName()) || input.getLastName().isEmpty()) {
             this.addMessage(ValidateMessage.create(
                     ValidateTypeEnum.ERROR,
                     LAST_NAME_IS_REQUIRED,
                     "Sobrenome obrigatório"
+            ));
+        }
+
+        if (Objects.nonNull(input.getLastName()) && input.getLastName().length() > 100) {
+            this.addMessage(ValidateMessage.create(
+                    ValidateTypeEnum.ERROR,
+                    LAST_NAME_IS_BIGGEST_THAN_MAX_SIZE,
+                    "O tamanho máximo de sobrenome é de 100 caracteres"
             ));
         }
 
@@ -49,7 +71,15 @@ public class ImportClientDomainInputValidation extends BaseValidation<ImportClie
             this.addMessage(ValidateMessage.create(
                     ValidateTypeEnum.ERROR,
                     EMAIL_IS_INVALID,
-                    "Email esta invalido, favor usar padrão email@dominio[.com][.org][.br]"
+                    "Email esta invalido"
+            ));
+        }
+
+        if (input.getEmail().getValue().length() > 100) {
+            this.addMessage(ValidateMessage.create(
+                    ValidateTypeEnum.ERROR,
+                    EMAIL_IS_BIGGEST_THAN_MAX_SIZE,
+                    "O tamanho máximo do email é de 100 caracteres"
             ));
         }
     }
