@@ -21,7 +21,7 @@ public class ClientReadOnlyRepository implements IClientReadOnlyRepository {
     }
 
     @Override
-    public PageableResponse<ClientReportView> list(
+    public PageableResponse<ClientReportView> listAll(
             final Specification<Client> spec,
             final Pageable page
     ) {
@@ -29,9 +29,10 @@ public class ClientReadOnlyRepository implements IClientReadOnlyRepository {
                 spec,
                 page
         );
+
         return PageableResponse.<ClientReportView, Client>create(
                 result,
-                (client) -> ClientReportView.create(client)
+                ClientReportView::create
         );
     }
 }

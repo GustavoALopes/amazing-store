@@ -5,7 +5,6 @@ import com.developerjorney.application.base.dtos.PageableResponse;
 import com.developerjorney.application.client.dtos.input.CreateAddressInput;
 import com.developerjorney.application.client.dtos.input.GetAllClientsInput;
 import com.developerjorney.application.client.dtos.input.ImportClientInput;
-import com.developerjorney.application.client.dtos.input.RangeDateInput;
 import com.developerjorney.application.client.dtos.view.ClientReportView;
 import com.developerjorney.application.client.queries.ClientQuery;
 import com.developerjorney.application.client.usecases.CreateAddressUseCase;
@@ -166,10 +165,8 @@ public class ClientControllerTest {
                 "Client",
                 "A",
                 "email@test.com",
-                new RangeDateInput(
-                        "2000-12-01",
-                        "2001-12-01"
-                )
+                LocalDate.parse("2000-12-01"),
+                LocalDate.parse("2001-12-01")
         );
 
         final var viewModel = PageableResponse.create(
@@ -187,7 +184,7 @@ public class ClientControllerTest {
         );
 
         //Mock
-        BDDMockito.given(this.query.report(
+        BDDMockito.given(this.query.listAll(
             Mockito.any(GetAllClientsInput.class),
             Mockito.any(Pageable.class)
         ))

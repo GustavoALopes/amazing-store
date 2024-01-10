@@ -23,6 +23,6 @@ public class ClientNameSpecification implements Specification<Client> {
             return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
         }
 
-        return criteriaBuilder.equal(root.get("name"), this.name);
+        return criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + this.name.toLowerCase() + "%");
     }
 }

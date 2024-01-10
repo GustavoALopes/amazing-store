@@ -2,7 +2,6 @@ package com.developerjorney.application.client.queries;
 
 import com.developerjorney.application.base.dtos.PageableResponse;
 import com.developerjorney.application.client.dtos.input.GetAllClientsInput;
-import com.developerjorney.application.client.dtos.input.RangeDateInput;
 import com.developerjorney.application.client.dtos.view.ClientReportView;
 import com.developerjorney.application.client.queries.repositories.IClientReadOnlyRepository;
 import org.assertj.core.api.Assertions;
@@ -18,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,10 +41,9 @@ public class ClientQueryTest {
                 "Cliente",
                 "A",
                 "email@test.com",
-                new RangeDateInput(
-                        "2000-12-01",
-                        "2002-12-01"
-                )
+                LocalDate.parse("2000-12-01"),
+                LocalDate.parse("2002-12-01")
+
         );
 
         final var viewModel = PageableResponse.create(
@@ -62,13 +61,13 @@ public class ClientQueryTest {
         );
 
         //Mock
-        BDDMockito.given(this.repository.list(
+        BDDMockito.given(this.repository.listAll(
                 Mockito.any(Specification.class),
                 Mockito.any(Pageable.class)
         )).willReturn(viewModel);
 
         //Execution
-        final var response = this.query.report(
+        final var response = this.query.listAll(
                 input,
                 Pageable.ofSize(20)
         );

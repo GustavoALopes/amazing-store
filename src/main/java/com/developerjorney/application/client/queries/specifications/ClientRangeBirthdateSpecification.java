@@ -1,6 +1,5 @@
 package com.developerjorney.application.client.queries.specifications;
 
-import com.developerjorney.application.client.dtos.input.RangeDateInput;
 import com.developerjorney.domain.client.entities.Client;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -17,13 +16,16 @@ public class ClientRangeBirthdateSpecification implements Specification<Client> 
 
     private final LocalDate finalDate;
 
-    public ClientRangeBirthdateSpecification(final RangeDateInput dates) {
-        if(Objects.isNull(dates) || this.checkIfNull(dates.initDate()) || this.checkIfNull(dates.finalDate())) {
+    public ClientRangeBirthdateSpecification(
+            final LocalDate initDate,
+            final LocalDate finalDate
+    ) {
+        if(Objects.isNull(initDate) || Objects.isNull(finalDate)) {
             this.initDate = null;
             this.finalDate = null;
         } else {
-            this.initDate = LocalDate.parse(dates.initDate());
-            this.finalDate = LocalDate.parse(dates.finalDate());
+            this.initDate = initDate;
+            this.finalDate = finalDate;
         }
     }
 
@@ -34,9 +36,5 @@ public class ClientRangeBirthdateSpecification implements Specification<Client> 
         }
 
         return criteriaBuilder.between(root.get("birthdate"), this.initDate, this.finalDate);
-    }
-
-    private boolean checkIfNull(final String value) {
-        return Objects.isNull(value) || value.isEmpty();
     }
 }

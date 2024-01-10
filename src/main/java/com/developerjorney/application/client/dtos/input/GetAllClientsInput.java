@@ -3,6 +3,8 @@ package com.developerjorney.application.client.dtos.input;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
+
 public record GetAllClientsInput(
 
         @Size(
@@ -27,5 +29,15 @@ public record GetAllClientsInput(
         )
         String email,
 
-        RangeDateInput dates
+        @Schema(
+                description = "The initial Date in ISO8601 format",
+                example = "2000-12-01"
+        )
+        LocalDate initDate,
+
+        @Schema(
+                description = "The final Date in ISO8601 format",
+                example = "2001-12-01"
+        )
+        LocalDate finalDate
 ) {}

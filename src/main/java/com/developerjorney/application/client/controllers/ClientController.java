@@ -102,10 +102,15 @@ public class ClientController extends BaseController {
             final @ParameterObject @ModelAttribute GetAllClientsInput input,
             final @ParameterObject @PageableDefault(size = 20) Pageable page
     ) {
-        final var result = this.query.report(
+        final var result = this.query.listAll(
                 input,
                 page
         );
+
+        if(result.getContent().isEmpty()) {
+            return  ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(DefaultResponse.create(result));
     }
 

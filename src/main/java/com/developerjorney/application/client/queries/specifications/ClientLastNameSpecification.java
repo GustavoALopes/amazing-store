@@ -23,6 +23,9 @@ public class ClientLastNameSpecification implements Specification<Client> {
             return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
         }
 
-        return criteriaBuilder.equal(root.get("lastName"), this.lastName);
+        return criteriaBuilder.like(
+                criteriaBuilder.lower(root.get("lastName")),
+                "%" + this.lastName.toLowerCase() + "%"
+        );
     }
 }
